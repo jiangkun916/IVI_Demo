@@ -22,7 +22,7 @@ public class ProcessorService extends IntentService{
 		}
 		
 		if (action.equals(Util.Action.ACTION_MSG_BOOT)) {
-			//1. Calculate live time: Trigger AlarmClock for calculating live time
+			//1. 收集数据  定时发送
 			DataCollector.set(this);
 		}
 		
