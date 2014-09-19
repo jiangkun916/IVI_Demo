@@ -20,12 +20,23 @@ public class ProcessorService extends IntentService{
 		if (TextUtils.isEmpty(action)) {
 			return;
 		}
+//		Intent target = new Intent(this,MainActivity.class);
+//		target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		
 		if (action.equals(Util.Action.ACTION_MSG_BOOT)) {
 			//1. 收集数据  定时发送
+			Util.log(TAG ,"------ACTION_MSG_BOOT-------");
 			DataCollector.set(this);
+			//target.setAction("com.borqs.ivi");
+			
+
 		}
-		
+//		if (target != null){
+//			startService(target);
+//			
+//			//context.startActivity(target);
+//			target = null;
+//		}
 	} 
 	
 }

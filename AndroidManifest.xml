@@ -8,14 +8,13 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="10" />
     
-    
     <uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <!-- 通过GPS芯片接收卫星的定位信息，定位精度达10米以内 -->
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-	
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -27,47 +26,47 @@
             android:name=".manual.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="com.borqs.ivi" />
+               <!--  <category android:name="android.intent.category.LAUNCHER" /> 
+                <category android:name="android.intent.category.default" />  -->
+               
 
-                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
         <!-- Message Receiver -->
-        <receiver android:name=".MessageReceiver">
+        <receiver android:name="com.borqs.ivi_collect.MessageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
         
          <!-- Services -->
         <service android:name=".ProcessorService">
 			<intent-filter>
-				<action android:name="com.borqs.bugreporter.ACTION_MSG_BOOT" />
+				<action android:name="com.borqs.ivi_collect.ACTION_MSG_BOOT" />
 			</intent-filter>
 		</service>
 		
         <service android:name=".ReportDataWrapper">
 			<intent-filter>
-				<action android:name="com.borqs.bugreporter.BUG_NOTIFY" />
+				<action android:name="com.borqs.ivi_collect.DATA_REPORT" />
 			</intent-filter>
 		</service>
 		
         <service android:name=".SenderService">
 			<intent-filter>
-				<action android:name="com.borqs.bugreporter.SEND_REPORT" />
+				<action android:name="com.borqs.ivi_collect.SEND_REPORT" />
 			</intent-filter>
 		</service>
 		
-        <service android:name=".collector.LiveTimeCollector">
+        <service android:name=".collector.DataCollector">
 			<intent-filter>
-				<action android:name="com.borqs.bugreporter.MONITOR_LIVE_TIME" />
+				<action android:name="com.borqs.ivi_collect.MONITOR_LIVE_TIME" />
 			</intent-filter>
 		</service>
-
+	
+        
         
         
         
