@@ -1,7 +1,6 @@
 package com.borqs.ivi_collect.collector;
 
 
-import com.borqs.ivi_collect.manual.MainActivity;
 import com.borqs.ivi_collect.util.Util;
 
 import android.app.AlarmManager;
@@ -26,55 +25,43 @@ public class DataCollector extends IntentService{
 	private static String lag = null;
 	private static String lng = null;
 	
-
-
 	public DataCollector() {
 		super(TAG);
 	}
 
 	@Override
 	protected void onHandleIntent(Intent arg0) {
+		
 		Intent target = new Intent();
-
-//		Intent target = new Intent(this,MainActivity.class);
-//		target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		getImsiAndImei();
 		getTuid();
 		getLongitudeAndLatitude();
 		
-
+		target.setAction(Util.Action.SEND_REPORT);
 		
-		
-//		target.setAction("com.borqs.ivi");
-		target.setAction(Util.Action.DATA_REPORT);
-		
-		target.putExtra(Util.ExtraKeys.TUID, tuid);
-		
+		target.putExtra(Util.ExtraKeys.TUID, tuid);		
 		Log.i(TAG, "---------------tuid======"+tuid+"------------------------");
 		
 		target.putExtra(Util.ExtraKeys.IMSI,imsi);
-		
 		Log.i(TAG, "---------------imsi======"+imsi+"------------------------");
-		target.putExtra(Util.ExtraKeys.IMEI, imei);
 		
+		target.putExtra(Util.ExtraKeys.IMEI, imei);
 		Log.i(TAG, "---------------IMEI======"+imei+"------------------------");
 		
-		
 		target.putExtra(Util.ExtraKeys.LONGITUDE, lng);
+		Log.i(TAG, "---------------LONGITUDE======"+lng+"------------------------");
+
 		target.putExtra(Util.ExtraKeys.LATITUDE, lag);
+		Log.i(TAG, "---------------LATITUDE======"+lag+"------------------------");
 
-		
-		//startActivity(target);
-		
 		startService(target);
-
 
 	}
 	
 	public static void set(Context context) {
+		
 		Util.log(TAG, "-----------------");
-
 		Intent liveTimeIntent = new Intent(Util.Action.MONITOR_LIVE_TIME);
 		PendingIntent liveTimeTriger = PendingIntent.getService(context, 0, liveTimeIntent, 0);
 		//launch 5 mins later to avoid too many works on receiving boot completed. 
@@ -116,8 +103,7 @@ public class DataCollector extends IntentService{
 	private void getLongitudeAndLatitude(){
 		LocationManager locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		Location loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-		if (loc != null) {
-			
+		if (loc != null) {		
 			lng = String.valueOf(loc.getLongitude());
 			lag = String.valueOf(loc.getLatitude());
 		}

@@ -1,13 +1,14 @@
 package com.borqs.ivi_collect.util;
 
+
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 public class Util {
-	/**
-	 * 
-	 * Define the actions.
-	 *
-	 */
+
 	public static final String TAG = "IVI_DATA";
 	
 	public static void log(String msg) {
@@ -23,7 +24,11 @@ public class Util {
 		msg = tag + "|" + msg;
 		log(msg);
 	}
-	
+	/**
+	 * 
+	 * Define the actions.
+	 *
+	 */	
 	
 	public static class Action {
 		public static final String ACTION_MSG_BOOT      = "com.borqs.ivi_collect.ACTION_MSG_BOOT";
@@ -40,46 +45,124 @@ public class Util {
 		
 		
 	}
+	/**
+	 * 
+	 * Define the extras info.
+	 *
+	 */
 	public static class ExtraKeys {
-		public static final String TUID = "tuid";
-		public static final String IMSI = "imsi";
-		public static final String IMEI = "imei";
-
+		
+		public static final String TUID      = "tuid";
+		public static final String IMSI      = "imsi";
+		public static final String IMEI      = "imei";
 		public static final String LONGITUDE = "Longitude";
-		public static final String LATITUDE = "Latitude";	
+		public static final String LATITUDE  = "Latitude";	
+	
+		
+		
+		
+		
+		public static final String reportJsonString = "reportJsonString";
 		
 	}
-	
+	/**
+	 * Define report data structure.
+	 */	
 	public static class ReportData {
-		public String tudi      = null;
+		
+		
+		public String tuid      = null;
 		public String imsi      = null;
 		public String imei      = null;
 		public String Longitude = null;
 		public String Latitude  = null;
 		
 		
+		public String getImsi() {
+			return imsi;
+		}
+		public void setImsi(String imsi) {
+			this.imsi = imsi;
+		}
+		public String getImei() {
+			return imei;
+		}
+		public void setImei(String imei) {
+			this.imei = imei;
+		}
+		public String getLongitude() {
+			return Longitude;
+		}
+		public void setLongitude(String longitude) {
+			Longitude = longitude;
+		}
+		public String getLatitude() {
+			return Latitude;
+		}
+		public void setLatitude(String latitude) {
+			Latitude = latitude;
+		}
+		public String getTuid() {
+			return tuid;
+		}
+		public void setTuid(String tuid) {
+			this.tuid = tuid;
+		}
+		public ReportData() {
+			super();
+		}
+		@Override
+		public String toString() {
+			return "ReportData [tudi=" + tuid + ", imsi=" + imsi + ", imei="
+					+ imei + ", Longitude=" + Longitude + ", Latitude="
+					+ Latitude + "]";
+		}
+
+	}
+	/**
+	 * 
+	 * JSON keys definitions 
+	 *
+	 */
+	public static class JSON {
+		
+		public static final String TUID      = "tuid";
+		public static final String IMSI      = "imsi";
+		public static final String IMEI      = "imei";
+		public static final String LONGITUDE = "Longitude";
+		public static final String LATITUDE  = "Latitude";	
+		public static final String GPS       = "gps";	
+		public static final String Server_ID = "id";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	//判断网络是否链接
+	public static boolean isNetworkAvailable(Context context) {
+		ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+		if(connManager == null){
+			return false;
+		}
+		
+		NetworkInfo netInfo = connManager.getActiveNetworkInfo();
+
+		if(netInfo.isConnected()){
+			int type = netInfo.getType();
+			switch (type) {
+			case ConnectivityManager.TYPE_WIFI: {
+				log("Type:WiFi");
+
+				return true;
+			}
+			case ConnectivityManager.TYPE_MOBILE: {
+				log("Type:3G");
+				return true;
+			}
+			default: {
+				return false;
+			}
+			}
+		}
+		return false;
+		
+	}
 	
 }

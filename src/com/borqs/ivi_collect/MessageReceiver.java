@@ -26,13 +26,11 @@ public class MessageReceiver extends BroadcastReceiver {
 		//Create a new intent
 		Intent target = new Intent();
 
-		
 		//Intent.ACTION_BOOT_COMPLETED
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
 			
 			Util.log(TAG ,"=======ACTION_BOOT_COMPLETED=======");
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
-			//target.setAction("com.borqs.ivi");
 		}
 
 		else{
@@ -43,8 +41,6 @@ public class MessageReceiver extends BroadcastReceiver {
 		//Transfer the message to processor service
 		if (target != null){
 			context.startService(target);
-			
-			//context.startActivity(target);
 			target = null;
 		}
 				
