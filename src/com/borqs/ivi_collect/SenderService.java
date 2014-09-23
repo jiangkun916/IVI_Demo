@@ -231,7 +231,7 @@ public class SenderService extends IntentService{
 	 * Extras: tuid
 	 *         imsi
 	 *         imei
-	 *         GPS (LONGITUDE, LATITUDE)
+	 *         gps (longitude, latitude)
 	 *         
 	 * 
 	 * @param string

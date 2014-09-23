@@ -5,6 +5,7 @@ import com.borqs.ivi_collect.util.Util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 
 /**
@@ -19,6 +20,7 @@ public class MessageReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		//Get action, and make sure it's not null or 0-length
+		
 		String action = intent.getAction();
 		if (TextUtils.isEmpty(action)) {
 			return;
@@ -28,7 +30,7 @@ public class MessageReceiver extends BroadcastReceiver {
 
 		//Intent.ACTION_BOOT_COMPLETED
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-			
+//			SystemClock.sleep(60*1000);
 			Util.log(TAG ,"=======ACTION_BOOT_COMPLETED=======");
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
 		}

@@ -18,7 +18,7 @@ import android.util.Log;
 public class DataCollector extends IntentService{
 
 	private final static String TAG = "DataCollector";	
-	private static long recordInterval = 5*1000;//AlarmManager.INTERVAL_FIFTEEN_MINUTES;
+	private static long recordInterval = 60*1000;//AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 	private static String imsi = null;
 	private static String imei = null;
 	private static String tuid = null;
@@ -65,7 +65,7 @@ public class DataCollector extends IntentService{
 		Intent liveTimeIntent = new Intent(Util.Action.MONITOR_LIVE_TIME);
 		PendingIntent liveTimeTriger = PendingIntent.getService(context, 0, liveTimeIntent, 0);
 		//launch 5 mins later to avoid too many works on receiving boot completed. 
-		long firstTime = System.currentTimeMillis(); //+ 5 * 60 * 1000;
+		long firstTime = System.currentTimeMillis()+20*1000; //+ 5 * 60 * 1000;
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC, firstTime, recordInterval, liveTimeTriger);
 		

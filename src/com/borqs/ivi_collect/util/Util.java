@@ -143,7 +143,11 @@ public class Util {
 		}
 		
 		NetworkInfo netInfo = connManager.getActiveNetworkInfo();
-
+		
+		if(netInfo == null){
+			return false;
+		}
+		
 		if(netInfo.isConnected()){
 			int type = netInfo.getType();
 			switch (type) {

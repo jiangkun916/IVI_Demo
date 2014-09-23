@@ -4,6 +4,13 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <supports-screens
+      android:smallScreens="true"
+      android:normalScreens="true"
+      android:largeScreens="true"
+      android:anyDensity="true" 
+      android:resizeable="true"/>
+    
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="10" />
@@ -12,7 +19,6 @@
 	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
@@ -35,7 +41,7 @@
         </activity>
         
         <!-- Message Receiver -->
-        <receiver android:name="com.borqs.ivi_collect.MessageReceiver">
+        <receiver android:name=".MessageReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -45,12 +51,6 @@
         <service android:name=".ProcessorService">
 			<intent-filter>
 				<action android:name="com.borqs.ivi_collect.ACTION_MSG_BOOT" />
-			</intent-filter>
-		</service>
-		
-        <service android:name=".ReportDataWrapper">
-			<intent-filter>
-				<action android:name="com.borqs.ivi_collect.DATA_REPORT" />
 			</intent-filter>
 		</service>
 		
@@ -65,10 +65,7 @@
 				<action android:name="com.borqs.ivi_collect.MONITOR_LIVE_TIME" />
 			</intent-filter>
 		</service>
-	
-        
-        
-        
+    
         
     </application>
 
