@@ -47,7 +47,7 @@ public class Util {
 		public static final String LONGITUDE = "Longitude";
 		public static final String LATITUDE  = "Latitude";	
 		public static final String TYPE      = "tpye";
-	
+		public static final String MODEL     = "model";
 		
 		
 		
@@ -66,8 +66,16 @@ public class Util {
 		public String imei      = null;
 		public String Longitude = null;
 		public String Latitude  = null;
-		public String type  = null;
+		public String type      = null;
+		public String model     = null;
 
+		public String getModel() {
+			return model;
+		}
+		public void setModel(String model) {
+			this.model = model;
+		}
+		
 		public String getType() {
 			return type;
 		}
@@ -131,6 +139,7 @@ public class Util {
 		public static final String GPS       = "gps";	
 		public static final String STATUS    = "status";
 		public static final String TYPE      = "tpye";
+		public static final String MODEL     = "model";
 
 	}
 	

@@ -46,6 +46,7 @@ public class SenderService extends IntentService{
 	private String lag = null;
 	private String lng = null;
 	private String type = null;
+	private String model = null;
 
 	public SenderService() {
 		super(TAG);
@@ -70,7 +71,8 @@ public class SenderService extends IntentService{
 			lng = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
 			lag = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
 			type = intent.getStringExtra(Util.ExtraKeys.TYPE);
-			Log.i(TAG, "==TYPE======"+type+"==");
+			model = intent.getStringExtra(Util.ExtraKeys.MODEL);
+
 
 			ReportData reportData = new ReportData();
 			reportData.setTuid(tuid);
@@ -79,16 +81,10 @@ public class SenderService extends IntentService{
 			reportData.setLongitude(lng);
 			reportData.setLatitude(lag);
 			reportData.setType(type);
-
+			reportData.setModel(model);
 			
 			NameValuePair reportJsonString = ConvertToJSONString(reportData);
-		
-			
-//			Intent target = new Intent(this,MainActivity.class);
-//			target.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);		
-//			target.putExtra(Util.ExtraKeys.reportJsonString, reportJsonString);
-//			target.setAction("com.borqs.ivi");
-//			startActivity(target);
+
 			
 			File f = null;
 			long newStatus = -1;
@@ -264,8 +260,7 @@ public class SenderService extends IntentService{
 	
 			//Put these info to reportDataJSONString object
 			reportDataJSONString.put(Util.JSON.TYPE, reportData.type);
-			
-			
+			reportDataJSONString.put(Util.JSON.MODEL, reportData.model);
 			reportDataJSONString.put(Util.JSON.TUID, reportData.tuid);
 			reportDataJSONString.put(Util.JSON.IMSI, reportData.imsi);
 			reportDataJSONString.put(Util.JSON.IMEI, reportData.imei);

@@ -14,18 +14,20 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
+import android.os.Build;
+import android.os.SystemProperties;
 
 public class DataCollector extends IntentService{
 
 	private final static String TAG = "DataCollector";	
 	private static long recordInterval = 60*1000;//AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-	private static String imsi = null;
-	private static String imei = null;
-	private static String tuid = null;
-	private static String lag  = null;
-	private static String lng  = null;
-	private static String type = null;
+	private static String imsi  = null;
+	private static String imei  = null;
+	private static String tuid  = null;
+	private static String lag   = null;
+	private static String lng   = null;
+	private static String type  = null;
+	private static String model = null;
 	
 	public DataCollector() {
 		super(TAG);
@@ -44,7 +46,9 @@ public class DataCollector extends IntentService{
 		getImsiAndImei();
 		getTuid();
 		getLongitudeAndLatitude();
-		type = android.os.Build.TYPE;
+		type = getType();	
+		model = getModel();
+
 		target.setAction(Util.Action.SEND_REPORT);
 		
 		target.putExtra(Util.ExtraKeys.TUID, tuid);		
@@ -64,6 +68,9 @@ public class DataCollector extends IntentService{
 		
 		target.putExtra(Util.ExtraKeys.TYPE, type);
 		Log.i(TAG, "---------------TYPE======"+type+"------------------------");
+		
+		target.putExtra(Util.ExtraKeys.MODEL, model);
+		Log.i(TAG, "---------------model======"+model+"------------------------");
 
 		startService(target);
 
@@ -106,7 +113,25 @@ public class DataCollector extends IntentService{
 	
 	//get tuid
 	private void getTuid(){
+		
 		tuid = Settings.System.getString(this.getContentResolver(), "CHINA_TSP_TUID");
+
+	}
+	//get type
+	private String getType(){
+		
+		String date = SystemProperties.get("ro.build.version.incremental",Build.UNKNOWN);
+		String ibuildNumber = SystemProperties.get("ro.build.revision",Build.UNKNOWN);		
+		String type = SystemProperties.get("ro.build.type", Build.UNKNOWN);
+		String end = type +"."+ date.substring(13, 21) + "." + ibuildNumber;
+		Log.i(TAG, "---------------eng======"+end+"------------------------");
+		return end;
+
+	}
+	
+	//get model
+	private String getModel(){
+		return android.os.Build.MODEL;
 
 	}
 	

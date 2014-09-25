@@ -6,6 +6,7 @@ import com.borqs.ivi_collect.util.Util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -37,6 +38,15 @@ public class MessageReceiver extends BroadcastReceiver {
 				return;
 			}
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
+			
+		}else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+			
+			if(Util.fileIsExists()){
+				Log.i(TAG, "has been sent to complete");
+				return;
+			}
+			target.setAction(Util.Action.ACTION_MSG_BOOT);
+			
 		}
 
 		else{
