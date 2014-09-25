@@ -1,12 +1,13 @@
 package com.borqs.ivi_collect;
 
+
 import com.borqs.ivi_collect.util.Util;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 
 /**
  * 
@@ -30,8 +31,11 @@ public class MessageReceiver extends BroadcastReceiver {
 
 		//Intent.ACTION_BOOT_COMPLETED
 		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-//			SystemClock.sleep(60*1000);
-			Util.log(TAG ,"=======ACTION_BOOT_COMPLETED=======");
+			
+			if(Util.fileIsExists()){
+				Log.i(TAG, "has been sent to complete");
+				return;
+			}
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
 		}
 
@@ -42,6 +46,7 @@ public class MessageReceiver extends BroadcastReceiver {
 		
 		//Transfer the message to processor service
 		if (target != null){
+			Log.i(TAG ,"=======ACTION_BOOT_COMPLETED=======");
 			context.startService(target);
 			target = null;
 		}

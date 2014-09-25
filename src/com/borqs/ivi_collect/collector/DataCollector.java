@@ -1,6 +1,7 @@
 package com.borqs.ivi_collect.collector;
 
 
+
 import com.borqs.ivi_collect.util.Util;
 
 import android.app.AlarmManager;
@@ -22,8 +23,9 @@ public class DataCollector extends IntentService{
 	private static String imsi = null;
 	private static String imei = null;
 	private static String tuid = null;
-	private static String lag = null;
-	private static String lng = null;
+	private static String lag  = null;
+	private static String lng  = null;
+	private static String type = null;
 	
 	public DataCollector() {
 		super(TAG);
@@ -33,11 +35,16 @@ public class DataCollector extends IntentService{
 	protected void onHandleIntent(Intent arg0) {
 		
 		Intent target = new Intent();
-
+		
+		if(Util.fileIsExists()){
+			Log.i(TAG, "has been sent to complete");
+			return;
+		}
+		
 		getImsiAndImei();
 		getTuid();
 		getLongitudeAndLatitude();
-		
+		type = android.os.Build.TYPE;
 		target.setAction(Util.Action.SEND_REPORT);
 		
 		target.putExtra(Util.ExtraKeys.TUID, tuid);		
@@ -47,28 +54,32 @@ public class DataCollector extends IntentService{
 		Log.i(TAG, "---------------imsi======"+imsi+"------------------------");
 		
 		target.putExtra(Util.ExtraKeys.IMEI, imei);
-		Log.i(TAG, "---------------IMEI======"+imei+"------------------------");
+		Log.i(TAG, "---------------imei======"+imei+"------------------------");
 		
 		target.putExtra(Util.ExtraKeys.LONGITUDE, lng);
-		Log.i(TAG, "---------------LONGITUDE======"+lng+"------------------------");
+		Log.i(TAG, "---------------Longitude======"+lng+"------------------------");
 
 		target.putExtra(Util.ExtraKeys.LATITUDE, lag);
-		Log.i(TAG, "---------------LATITUDE======"+lag+"------------------------");
+		Log.i(TAG, "---------------Latitude======"+lag+"------------------------");
+		
+		target.putExtra(Util.ExtraKeys.TYPE, type);
+		Log.i(TAG, "---------------TYPE======"+type+"------------------------");
 
 		startService(target);
 
 	}
 	
 	public static void set(Context context) {
-		
-		Util.log(TAG, "-----------------");
+
+		Log.i(TAG, "-----------------");
+
 		Intent liveTimeIntent = new Intent(Util.Action.MONITOR_LIVE_TIME);
 		PendingIntent liveTimeTriger = PendingIntent.getService(context, 0, liveTimeIntent, 0);
 		//launch 5 mins later to avoid too many works on receiving boot completed. 
-		long firstTime = System.currentTimeMillis()+20*1000; //+ 5 * 60 * 1000;
+		long firstTime = System.currentTimeMillis()+20*1000;
 		AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 		am.setRepeating(AlarmManager.RTC, firstTime, recordInterval, liveTimeTriger);
-		
+
 	}
 	//get IMSI and IMEI
 	private void getImsiAndImei(){
@@ -101,7 +112,7 @@ public class DataCollector extends IntentService{
 	
 	//get Longitude and Latitude
 	private void getLongitudeAndLatitude(){
-		LocationManager locMan = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Location loc = locMan.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (loc != null) {		
 			lng = String.valueOf(loc.getLongitude());

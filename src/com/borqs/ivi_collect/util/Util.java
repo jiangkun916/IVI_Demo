@@ -2,6 +2,8 @@ package com.borqs.ivi_collect.util;
 
 
 
+import java.io.File;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,20 +12,7 @@ import android.util.Log;
 public class Util {
 
 	public static final String TAG = "IVI_DATA";
-	
-	public static void log(String msg) {
-		if (msg == null) {
-			return;
-		}
-		Log.d(TAG, msg);
-	}
-	public static void log(String tag, String msg) {
-		if (msg == null) {
-			return;
-		}
-		msg = tag + "|" + msg;
-		log(msg);
-	}
+
 	/**
 	 * 
 	 * Define the actions.
@@ -57,6 +46,7 @@ public class Util {
 		public static final String IMEI      = "imei";
 		public static final String LONGITUDE = "Longitude";
 		public static final String LATITUDE  = "Latitude";	
+		public static final String TYPE      = "tpye";
 	
 		
 		
@@ -76,7 +66,14 @@ public class Util {
 		public String imei      = null;
 		public String Longitude = null;
 		public String Latitude  = null;
-		
+		public String type  = null;
+
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
 		
 		public String getImsi() {
 			return imsi;
@@ -132,7 +129,9 @@ public class Util {
 		public static final String LONGITUDE = "Longitude";
 		public static final String LATITUDE  = "Latitude";	
 		public static final String GPS       = "gps";	
-		public static final String Server_ID = "id";
+		public static final String STATUS    = "status";
+		public static final String TYPE      = "tpye";
+
 	}
 	
 	//判断网络是否链接
@@ -152,12 +151,12 @@ public class Util {
 			int type = netInfo.getType();
 			switch (type) {
 			case ConnectivityManager.TYPE_WIFI: {
-				log("Type:WiFi");
+				Log.i(TAG,"Type:WiFi");
 
 				return true;
 			}
 			case ConnectivityManager.TYPE_MOBILE: {
-				log("Type:3G");
+				Log.i(TAG,"Type:3G");
 				return true;
 			}
 			default: {
@@ -168,5 +167,12 @@ public class Util {
 		return false;
 		
 	}
+	public static boolean fileIsExists(){
+        File f=new File("/sdcard/a.txt");
+        if(!f.exists()){
+                return false;
+        }
+        return true;
+}
 	
 }
