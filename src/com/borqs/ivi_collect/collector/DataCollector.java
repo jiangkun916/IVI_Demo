@@ -26,7 +26,7 @@ public class DataCollector extends IntentService{
 	private static String tuid  = null;
 	private static String lag   = null;
 	private static String lng   = null;
-	private static String type  = null;
+	private static String build_number  = null;
 	private static String model = null;
 	
 	public DataCollector() {
@@ -46,7 +46,7 @@ public class DataCollector extends IntentService{
 		getImsiAndImei();
 		getTuid();
 		getLongitudeAndLatitude();
-		type = getType();	
+		build_number = getBuild_number();	
 		model = getModel();
 
 		target.setAction(Util.Action.SEND_REPORT);
@@ -66,8 +66,8 @@ public class DataCollector extends IntentService{
 		target.putExtra(Util.ExtraKeys.LATITUDE, lag);
 		Log.i(TAG, "---------------Latitude======"+lag+"------------------------");
 		
-		target.putExtra(Util.ExtraKeys.TYPE, type);
-		Log.i(TAG, "---------------TYPE======"+type+"------------------------");
+		target.putExtra(Util.ExtraKeys.BUILD_NUMBER, build_number);
+		Log.i(TAG, "---------------build_number======"+build_number+"------------------------");
 		
 		target.putExtra(Util.ExtraKeys.MODEL, model);
 		Log.i(TAG, "---------------model======"+model+"------------------------");
@@ -118,13 +118,13 @@ public class DataCollector extends IntentService{
 
 	}
 	//get type
-	private String getType(){
+	private String getBuild_number(){
 		
 		String date = SystemProperties.get("ro.build.version.incremental",Build.UNKNOWN);
 		String ibuildNumber = SystemProperties.get("ro.build.revision",Build.UNKNOWN);		
 		String type = SystemProperties.get("ro.build.type", Build.UNKNOWN);
 		String end = type +"."+ date.substring(13, 21) + "." + ibuildNumber;
-		Log.i(TAG, "---------------eng======"+end+"------------------------");
+		Log.i(TAG, "---------------end======"+end+"------------------------");
 		return end;
 
 	}

@@ -25,12 +25,8 @@ public class Util {
 		public static final String SEND_REPORT          = "com.borqs.ivi_collect.SEND_REPORT";
 		
 		public static final String MONITOR_LIVE_TIME    = "com.borqs.ivi_collect.MONITOR_LIVE_TIME";
-		public static final String MANAUL_REPORT        = "com.borqs.ivi_collect.MANUAL_REPORT";
 		
-		public static final String VIEW_SYS_INFO        = "com.borqs.ivi_collect.VIEW_SYSTEM_INFO";
-		public static final String TYPE_CONTROL_LIST    = "com.borqs.ivi_collect.TYPE_CONTROL_LIST";
-		public static final String VIEW_LOCAL_DATA      = "com.borqs.ivi_collect.VIEW_LOCAL_DATA";
-		public static final String VIEW_ABOUT           = "com.borqs.ivi_collect.VIEW_ABOUT";
+
 		
 		
 	}
@@ -41,13 +37,13 @@ public class Util {
 	 */
 	public static class ExtraKeys {
 		
-		public static final String TUID      = "tuid";
-		public static final String IMSI      = "imsi";
-		public static final String IMEI      = "imei";
-		public static final String LONGITUDE = "Longitude";
-		public static final String LATITUDE  = "Latitude";	
-		public static final String TYPE      = "tpye";
-		public static final String MODEL     = "model";
+		public static final String TUID         = "tuid";
+		public static final String IMSI         = "imsi";
+		public static final String IMEI         = "imei";
+		public static final String LONGITUDE    = "Longitude";
+		public static final String LATITUDE     = "Latitude";	
+		public static final String BUILD_NUMBER = "build_number";
+		public static final String MODEL        = "model";
 		
 		
 		
@@ -61,13 +57,13 @@ public class Util {
 	public static class ReportData {
 		
 		
-		public String tuid      = null;
-		public String imsi      = null;
-		public String imei      = null;
-		public String Longitude = null;
-		public String Latitude  = null;
-		public String type      = null;
-		public String model     = null;
+		public String tuid         = null;
+		public String imsi         = null;
+		public String imei         = null;
+		public String Longitude    = null;
+		public String Latitude     = null;
+		public String build_number = null;
+		public String model        = null;
 
 		public String getModel() {
 			return model;
@@ -76,11 +72,11 @@ public class Util {
 			this.model = model;
 		}
 		
-		public String getType() {
-			return type;
+		public String getBuild_number() {
+			return build_number;
 		}
-		public void setType(String type) {
-			this.type = type;
+		public void setBuild_number(String build_number) {
+			this.build_number = build_number;
 		}
 		
 		public String getImsi() {
@@ -131,15 +127,15 @@ public class Util {
 	 */
 	public static class JSON {
 		
-		public static final String TUID      = "tuid";
-		public static final String IMSI      = "imsi";
-		public static final String IMEI      = "imei";
-		public static final String LONGITUDE = "Longitude";
-		public static final String LATITUDE  = "Latitude";	
-		public static final String GPS       = "gps";	
-		public static final String STATUS    = "status";
-		public static final String TYPE      = "tpye";
-		public static final String MODEL     = "model";
+		public static final String TUID         = "tuid";
+		public static final String IMSI         = "imsi";
+		public static final String IMEI         = "imei";
+		public static final String LONGITUDE    = "Longitude";
+		public static final String LATITUDE     = "Latitude";	
+		public static final String GPS          = "gps";	
+		public static final String STATUS       = "status";
+		public static final String BUILD_NUMBER = "build_number";
+		public static final String MODEL        = "model";
 
 	}
 	
@@ -161,7 +157,6 @@ public class Util {
 			switch (type) {
 			case ConnectivityManager.TYPE_WIFI: {
 				Log.i(TAG,"Type:WiFi");
-
 				return true;
 			}
 			case ConnectivityManager.TYPE_MOBILE: {

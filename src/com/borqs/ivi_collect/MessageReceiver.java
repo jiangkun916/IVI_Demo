@@ -31,20 +31,8 @@ public class MessageReceiver extends BroadcastReceiver {
 		Intent target = new Intent();
 
 		//Intent.ACTION_BOOT_COMPLETED
-		if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
-			
-			if(Util.fileIsExists()){
-				Log.i(TAG, "has been sent to complete");
-				return;
-			}
-			target.setAction(Util.Action.ACTION_MSG_BOOT);
-			
-		}else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-			
-			if(Util.fileIsExists()){
-				Log.i(TAG, "has been sent to complete");
-				return;
-			}
+		if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {			
+
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
 			
 		}

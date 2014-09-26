@@ -4,7 +4,6 @@ package com.borqs.ivi_collect;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -45,7 +44,7 @@ public class SenderService extends IntentService{
 	private String tuid = null;
 	private String lag = null;
 	private String lng = null;
-	private String type = null;
+	private String build_number = null;
 	private String model = null;
 
 	public SenderService() {
@@ -70,7 +69,7 @@ public class SenderService extends IntentService{
 			imei = intent.getStringExtra(Util.ExtraKeys.IMEI);
 			lng = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
 			lag = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
-			type = intent.getStringExtra(Util.ExtraKeys.TYPE);
+			build_number = intent.getStringExtra(Util.ExtraKeys.BUILD_NUMBER);
 			model = intent.getStringExtra(Util.ExtraKeys.MODEL);
 
 
@@ -80,7 +79,7 @@ public class SenderService extends IntentService{
 			reportData.setImei(imei);
 			reportData.setLongitude(lng);
 			reportData.setLatitude(lag);
-			reportData.setType(type);
+			reportData.setBuild_number(build_number);
 			reportData.setModel(model);
 			
 			NameValuePair reportJsonString = ConvertToJSONString(reportData);
@@ -259,7 +258,7 @@ public class SenderService extends IntentService{
 			gps.put(Util.ExtraKeys.LATITUDE ,lag );
 	
 			//Put these info to reportDataJSONString object
-			reportDataJSONString.put(Util.JSON.TYPE, reportData.type);
+			reportDataJSONString.put(Util.JSON.BUILD_NUMBER, reportData.build_number);
 			reportDataJSONString.put(Util.JSON.MODEL, reportData.model);
 			reportDataJSONString.put(Util.JSON.TUID, reportData.tuid);
 			reportDataJSONString.put(Util.JSON.IMSI, reportData.imsi);
