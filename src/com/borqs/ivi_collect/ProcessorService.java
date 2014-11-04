@@ -23,6 +23,7 @@ public class ProcessorService extends IntentService{
 		}
 
 		if (action.equals(Util.Action.ACTION_MSG_BOOT)) {
+			
 			//1. 收集数据  定时发送
 			Log.i(TAG ,"------ACTION_MSG_BOOT-------");
 			DataCollector.set(this);
