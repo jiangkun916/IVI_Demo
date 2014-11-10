@@ -29,11 +29,11 @@ public class SendAllService extends IntentService{
 	private String tuid = null;
 	private String Latitude = null;
 	private String Longitude = null;
-	private String build_number = null;
+	private String build = null;
 	private String model = null;
 	private String poweron = null;
 	private String lastpoweroff = null;
-	private String sendtime = null;
+	private String time = null;
 
 	public SendAllService() {
 		super(TAG);
@@ -61,11 +61,11 @@ public class SendAllService extends IntentService{
 			imei = intent.getStringExtra(Util.ExtraKeys.IMEI);
 			Longitude = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
 			Latitude = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
-			build_number = intent.getStringExtra(Util.ExtraKeys.BUILD_NUMBER);
+			build = intent.getStringExtra(Util.ExtraKeys.BUILD);
 			model = intent.getStringExtra(Util.ExtraKeys.MODEL);
 			poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
 			lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
-			sendtime = intent.getStringExtra(Util.ExtraKeys.SENDTIME);
+			time = intent.getStringExtra(Util.ExtraKeys.TIME);
 	
 			ReportData reportData = new ReportData();
 			reportData.setTuid(tuid);
@@ -73,11 +73,11 @@ public class SendAllService extends IntentService{
 			reportData.setImei(imei);
 			reportData.setLongitude(Longitude);
 			reportData.setLatitude(Latitude);
-			reportData.setBuild_number(build_number);
+			reportData.setBuild(build);
 			reportData.setModel(model);
 			reportData.setPowerOn(poweron);
 			reportData.setLastPowerOff(lastpoweroff);
-			reportData.setSendTime(sendtime);
+			reportData.setSendTime(time);
 				
 			NameValuePair reportJsonString = ConvertToJSONString(reportData);
 			
@@ -110,8 +110,8 @@ public class SendAllService extends IntentService{
 	 * Extras: tuid
 	 *         imsi
 	 *         imei
-	 *         gps (longitude, latitude,sendtime)
-	 *         build_number
+	 *         gps (longitude, latitude, time)
+	 *         build
 	 *         model
 	 *         poweron
 	 *         lastpoweroff
@@ -130,10 +130,10 @@ public class SendAllService extends IntentService{
 			//Get gps
 			gps.put(Util.ExtraKeys.LONGITUDE, reportData.Longitude );
 			gps.put(Util.ExtraKeys.LATITUDE, reportData.Latitude );
-			gps.put(Util.ExtraKeys.SENDTIME, reportData.sendtime);
+			gps.put(Util.ExtraKeys.TIME, reportData.time);
 	
 			//Put these info to reportDataJSONString object
-			reportDataJSONString.put(Util.ExtraKeys.BUILD_NUMBER, reportData.build_number);
+			reportDataJSONString.put(Util.ExtraKeys.BUILD, reportData.build);
 			reportDataJSONString.put(Util.ExtraKeys.MODEL, reportData.model);
 			reportDataJSONString.put(Util.ExtraKeys.TUID, reportData.tuid);
 			reportDataJSONString.put(Util.ExtraKeys.IMSI, reportData.imsi);

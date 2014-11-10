@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import com.borqs.ivi_collect.util.Util;
 
@@ -28,18 +26,17 @@ import android.os.SystemProperties;
 public class DataCollector extends IntentService {
 
 	private final static String TAG = "DataCollector";
-	private final static String serverUrl = "http://releaseadmin.borqs.com/su/gps.php";
 	private static long recordInterval = 60 * 1000;// AlarmManager.INTERVAL_FIFTEEN_MINUTES;
 	private String imsi = null;
 	private String imei = null;
 	private String tuid = null;
 	private String Latitude = null;
 	private String Longitude = null;
-	private String build_number = null;
+	private String build = null;
 	private String model = null;
 	private final String poweron = getPowerOn();
 	private String lastpoweroff = null;
-	private String sendtime = null;
+	private String time = null;
 
 	public DataCollector() {
 		super(TAG);
@@ -47,55 +44,59 @@ public class DataCollector extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Intent target = new Intent();
-		
-		
-//		String result = null;
-//		File file1 = null;
-//		file1 = new File("/sdcard/b.txt");
-//
-//		if (file1.exists()) {
-//			try {
-//				BufferedReader br = new BufferedReader(new FileReader(file1));
-//				String s = null;
-//				while ((s = br.readLine()) != null) {
-//					result = s;
-//					Log.i(TAG, "-------------->>"+result);
-//				}
-//				
-//	            NameValuePair nameValuePair = new BasicNameValuePair("info", result.substring(5)); 
-//	            Log.i(TAG,"nameValuePair:"+nameValuePair.toString());
-//	            
-//	            long newStatus = -1;
-//	            newStatus = Util.sendReport(serverUrl, nameValuePair);
-//	            Log.i(TAG,"newStatus:"+newStatus);
-//
-//	            if(newStatus == 0){
-//	            	file1.delete();
-//	            }
-//				Util.FirstSend = false;
-//	            return;
-//
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
 
+		Intent target = new Intent();
 		if (Util.FirstSend) {
+
+			// String result = null;
+			// File file1 = null;
+			// file1 = new File("/sdcard/b.txt");
+			// if (file1.exists()) {
+			// try {
+			// BufferedReader br = new BufferedReader(new FileReader(file1));
+			// String s = null;
+			// while ((s = br.readLine()) != null) {
+			// result = s;
+			// Log.i(TAG, "-------------->>" + result);
+			// }
+			// NameValuePair nameValuePair = new BasicNameValuePair("info",
+			// result.substring(5));
+			// Log.i(TAG, "nameValuePair:" + nameValuePair.toString());
+			// long newStatus = -1;
+			// newStatus = Util.sendReport(serverUrl, nameValuePair);
+			// Log.i(TAG, "newStatus:" + newStatus);
+			//
+			// if (newStatus == 0) {
+			// file1.delete();
+			// }
+			//
+			//
+			//
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
+			// }
+
 			// poweron = getPowerOn();
 			tuid = getTuid();
-			build_number = getBuild_number();
+			build = getBuild_number();
 			model = getModel();
 			lastpoweroff = getLastPowerOff();
+			imsi = getImsi();
+			imei = getImei();
+			// getImsiAndImei();
+//			getLongitudeAndLatitude();
+			Longitude = getLongitude();
+			Latitude = getLatitude();
+			time = getCollectTime();
+			
+			
+//			if (tuid == null || Longitude == null || Latitude == null) {
+//				Log.i(TAG, "---Longitude--->>"+Longitude+"---Latitude--->>"+Latitude);
+//				return;
+//			}
 
-			getImsiAndImei();
-			getLongitudeAndLatitude();
-
-			if (tuid == null || Longitude == null || Latitude == null) {
-				return;
-			}
-
-			target.setAction(Util.Action.SEND_ALL_REPORT);
+			target.setAction(Util.Action.DATA_SAVE);
 
 			target.putExtra(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
 			Log.i(TAG, "---------------lastpowerof======" + lastpoweroff
@@ -125,20 +126,16 @@ public class DataCollector extends IntentService {
 			Log.i(TAG, "---------------Latitude======" + Latitude
 					+ "---------------------");
 
-			target.putExtra(Util.ExtraKeys.SENDTIME, sendtime);
-			Log.i(TAG, "---------------sendtime======" + sendtime
+			target.putExtra(Util.ExtraKeys.TIME, time);
+			Log.i(TAG, "---------------time======" + time
 					+ "---------------------");
 
-			target.putExtra(Util.ExtraKeys.BUILD_NUMBER, build_number);
-			Log.i(TAG, "---------------build_number======" + build_number
-					+ "--------");
+			target.putExtra(Util.ExtraKeys.BUILD, build);
+			Log.i(TAG, "---------------build======" + build + "--------");
 
 			target.putExtra(Util.ExtraKeys.MODEL, model);
 			Log.i(TAG, "---------------model======" + model
 					+ "----------------------");
-
-			Util.FirstSend = false;
-			
 			File file = null;
 			file = new File("/sdcard/a.txt");
 
@@ -147,14 +144,50 @@ public class DataCollector extends IntentService {
 			}
 
 		} else {
+
+//			String result = null;
+//			File file2 = new File("/sdcard/c.txt");
+//			if (file2.exists()) {
+//				try {
+//					BufferedReader br = new BufferedReader(
+//							new FileReader(file2));
+//					String s = null;
+//					while ((s = br.readLine()) != null) {
+//						result = s;
+//						Log.i(TAG, "-------------->>" + result);
+//						NameValuePair nameValuePair = new BasicNameValuePair(
+//								"info", result.substring(5));
+//						Log.i(TAG, "nameValuePair:" + nameValuePair.toString());
+//						long newStatus = -1;
+//						newStatus = Util.sendReport(serverUrl, nameValuePair);
+//						Log.i(TAG, "newStatus:" + newStatus);
+//
+//						if (newStatus == 0) {
+//							Util.read("/sdcard/c.txt");
+//							Util.delete(1);
+//							Util.write("/sdcard/c.txt");
+//							Util.list.clear();
+//						}
+//					}
+//					br.close();
+//
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+
+			
 			tuid = getTuid();
-			getLongitudeAndLatitude();
+			Longitude = getLongitude();
+			Latitude = getLatitude();
+			time = getCollectTime();
 
 			if (tuid == null || Longitude == null || Latitude == null) {
+				Log.i(TAG, "---Longitude--->>"+Longitude+"---Latitude--->>"+Latitude);
 				return;
 			}
 
-			target.setAction(Util.Action.SEND_LITTLE_REPORT);
+			target.setAction(Util.Action.DATA_SAVE);
 
 			target.putExtra(Util.ExtraKeys.TUID, tuid);
 			Log.i(TAG, "---------------tuid======" + tuid
@@ -168,8 +201,8 @@ public class DataCollector extends IntentService {
 			Log.i(TAG, "---------------Latitude======" + Latitude
 					+ "---------------------");
 
-			target.putExtra(Util.ExtraKeys.SENDTIME, sendtime);
-			Log.i(TAG, "---------------sendtime======" + sendtime
+			target.putExtra(Util.ExtraKeys.TIME, time);
+			Log.i(TAG, "---------------time======" + time
 					+ "---------------------");
 
 		}
@@ -193,31 +226,59 @@ public class DataCollector extends IntentService {
 				liveTimeTriger);
 
 	}
-	
-	// get IMSI and IMEI
-	private void getImsiAndImei() {
+
+	// // get IMSI and IMEI
+	// private void getImsiAndImei() {
+	// TelephonyManager tm = (TelephonyManager)
+	// getSystemService(Context.TELEPHONY_SERVICE);
+	// if (tm != null) {
+	// imsi = tm.getLine1Number();
+	// if (imsi == null || imsi.equals("")) {
+	// imsi = "00000000000";
+	// }
+	// imei = tm.getDeviceId();
+	// if (imei == null || imei.equals("")) {
+	// imei = "000000000000000";
+	// }
+	// } else {
+	// imsi = "00000000000";
+	// imei = "000000000000000";
+	// }
+	// }
+
+	// get imsi
+	private String getImsi() {
 		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
 		if (tm != null) {
-			imsi = tm.getLine1Number();
+			String imsi = tm.getLine1Number();
 			if (imsi == null || imsi.equals("")) {
-				imsi = "00000000000";
+				return "00000000000";
 			}
-			imei = tm.getDeviceId();
-			if (imei == null || imei.equals("")) {
-				imei = "000000000000000";
-			}
+			return imsi;
 		} else {
-			imsi = "00000000000";
-			imei = "000000000000000";
+			return "00000000000";
+
+		}
+	}
+
+	// get imei
+	private String getImei() {
+		TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+		if (tm != null) {
+			String imei = tm.getDeviceId();
+			if (imei == null || imei.equals("")) {
+				return "000000000000000";
+			}
+			return imei;
+		} else {
+			return "000000000000000";
 		}
 	}
 
 	// get tuid
 	private String getTuid() {
-
 		return Settings.System.getString(this.getContentResolver(),
 				"CHINA_TSP_TUID");
-
 	}
 
 	// get type
@@ -231,7 +292,6 @@ public class DataCollector extends IntentService {
 		String end = type + "." + date.substring(13, 21) + "." + ibuildNumber;
 
 		return end;
-
 	}
 
 	// get model
@@ -241,28 +301,87 @@ public class DataCollector extends IntentService {
 	}
 
 	// get Longitude,Latitude and time
-	private void getLongitudeAndLatitude() {
+//	private void getLongitudeAndLatitude() {
+//		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//		Location loc = locMan
+//				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//		if (loc != null) {
+//			Longitude = String.valueOf(loc.getLongitude());
+//			Latitude = String.valueOf(loc.getLatitude());
+//
+//		}
+//
+//		time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+//	}
+
+	// get Longitude
+	private String getLongitude(){
 		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		Location loc = locMan
 				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (loc != null) {
-			Longitude = String.valueOf(loc.getLongitude());
-			Latitude = String.valueOf(loc.getLatitude());
-
+			return String.valueOf(loc.getLongitude());
 		}
-		long start = System.currentTimeMillis();
-		Date d = new Date(start);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		sendtime = sdf.format(d);
+		
+		return null;
 	}
-
+	
+	// get Latitude
+	private String getLatitude(){
+		LocationManager locMan = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Location loc = locMan
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (loc != null) {
+			return String.valueOf(loc.getLatitude());
+		}
+		
+		return null;
+	}
+	
 	// get time
+	private String getCollectTime(){
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+
+	}	
+	
+	// get power on
 	private String getPowerOn() {
-		long start = System.currentTimeMillis() - 20 * 1000;
-		Date d = new Date(start);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String time = sdf.format(d);
-		return time;
+		File file = null;
+		file = new File("/sdcard/b.txt");
+		if (!file.exists()) {
+			return null;
+		}
+		String result = null;
+		FileReader fileReader = null;
+		BufferedReader bufferedReader = null;
+		try {
+			fileReader = new FileReader(file);
+			bufferedReader = new BufferedReader(fileReader);
+			try {
+				result = bufferedReader.readLine();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (bufferedReader != null) {
+				try {
+					bufferedReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (fileReader != null) {
+				try {
+					fileReader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
 	}
 
 	// get last shutdown time

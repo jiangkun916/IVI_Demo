@@ -12,31 +12,26 @@ import android.content.Intent;
 import android.util.Log;
 
 public class ShutDownReceiver extends BroadcastReceiver {
-
+	
+	private static final String TAG = "ShutDownReceiver";
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		long start = System.currentTimeMillis();
-		Date d = new Date(start);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String time = sdf.format(d);
-		Log.i("MainActivity", "启动关闭中...");
-		Log.i("MainActivity", time);
 
-		File file = null;
-		file = new File("/sdcard/b.txt");
-		if (file.exists()) {
-			file.delete();
-		}
-		
-		File filec = new File("/sdcard/c.txt");
-		if (filec.exists()) {
-			filec.delete();
-		}
+		String shutDownTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+		Log.i(TAG, "启动关闭中...");
+		Log.i(TAG, shutDownTime);
+
+
+//		File file = new File("/sdcard/b.txt");
+//		if (file.exists()) {
+//			file.delete();
+//		}
+
 		
 		try {
 			FileOutputStream fs = new FileOutputStream(
 					new File("/sdcard/a.txt"));
-			fs.write(time.getBytes());
+			fs.write(shutDownTime.getBytes());
 			fs.close();
 		} catch (IOException e) {
 			e.printStackTrace();

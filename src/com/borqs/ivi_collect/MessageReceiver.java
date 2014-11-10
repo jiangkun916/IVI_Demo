@@ -6,7 +6,6 @@ import com.borqs.ivi_collect.util.Util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -31,7 +30,7 @@ public class MessageReceiver extends BroadcastReceiver {
 		Intent target = new Intent();
 
 		//Intent.ACTION_BOOT_COMPLETED
-		if (action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {			
+		if (action.equals(Intent.ACTION_BOOT_COMPLETED)){ //|| action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {			
 
 			target.setAction(Util.Action.ACTION_MSG_BOOT);
 			

@@ -69,6 +69,12 @@
                 <action android:name="com.borqs.ivi_collect.DATA_REPORT" />
             </intent-filter>
         </service>
+        
+         <service android:name="com.borqs.ivi_collect.collector.DataSave" >
+            <intent-filter>
+                <action android:name="com.borqs.ivi_collect.DATA_SAVE" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

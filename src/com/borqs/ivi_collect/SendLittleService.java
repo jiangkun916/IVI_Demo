@@ -28,7 +28,8 @@ public class SendLittleService extends IntentService {
 	private String tuid = null;
 	private String Latitude = null;
 	private String Longitude = null;
-	private String sendtime = null;
+	private String time = null;
+
 
 	public SendLittleService() {
 		super(TAG);
@@ -53,13 +54,13 @@ public class SendLittleService extends IntentService {
 			tuid = intent.getStringExtra(Util.ExtraKeys.TUID);
 			Longitude = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
 			Latitude = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
-			sendtime = intent.getStringExtra(Util.ExtraKeys.SENDTIME);
+			time = intent.getStringExtra(Util.ExtraKeys.TIME);
 
 			ReportLittleData reportLittleData = new ReportLittleData();
 			reportLittleData.setTuid(tuid);
 			reportLittleData.setLongitude(Longitude);
 			reportLittleData.setLatitude(Latitude);
-			reportLittleData.setSendTime(sendtime);
+			reportLittleData.setSendTime(time);
 
 			NameValuePair reportJsonString = ConvertToJSONString(reportLittleData);
 
@@ -78,41 +79,46 @@ public class SendLittleService extends IntentService {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 				try {
 					FileWriter fw = new FileWriter(file, true);
 					BufferedWriter bw = new BufferedWriter(fw);
-					if (file.length() < 1560) {
-						bw.write(reportJsonString.toString());
-						bw.flush();
-						bw.write("\n");
-						bw.flush();
-					}else{
-						BufferedReader br = new BufferedReader(new FileReader("/sdcard/c.txt"));
-						BufferedWriter bw1 = new BufferedWriter(new FileWriter("/sdcard/c.txt"));
-						String line = null;
-						while((line = br.readLine())!= null){
-							bw1.write(line);
-							bw1.newLine();
-							bw1.flush();
-						}
-						bw.write(reportJsonString.toString());
-						bw.flush();
-						bw.write("\n");
-						bw.flush();
-						br.close();
-						bw1.close();
+
+					String str;
+					int count = 0;
+					FileReader fr = new FileReader(file);
+					BufferedReader bfr = new BufferedReader(fr);
+					while ((str = bfr.readLine()) != null) {
+						count++;
 					}
-					bw.close();
+
+					if (count < 10) {
+						bw.write(reportJsonString.toString());
+						bw.newLine();
+						bw.flush();
+					} else {
+						// 大于10 删除第一行，把新数据添加
+						Util.read("/sdcard/c.txt");
+						Util.delete(1);
+						Util.addToFinal(reportJsonString.toString());
+						Util.write("/sdcard/c.txt");
+						Util.list.clear();
+					}
+					fr.close();
 					fw.close();
+					
+					bfr.close();
+					bw.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 
 	}
 
+	
 	/**
 	 * Convert the reportLittleData into JSON string which can be send directly.
 	 * JSONObject: ReportDataJSONString Extras: tuid gps (longitude, latitude,
@@ -132,7 +138,7 @@ public class SendLittleService extends IntentService {
 			// Get gps
 			gps.put(Util.ExtraKeys.LONGITUDE, reportLittleData.Longitude);
 			gps.put(Util.ExtraKeys.LATITUDE, reportLittleData.Latitude);
-			gps.put(Util.ExtraKeys.SENDTIME, reportLittleData.sendtime);
+			gps.put(Util.ExtraKeys.TIME, reportLittleData.time);
 
 			// Put these info to reportDataJSONString object
 			reportDataJSONString
