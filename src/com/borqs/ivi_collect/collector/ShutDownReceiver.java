@@ -20,13 +20,6 @@ public class ShutDownReceiver extends BroadcastReceiver {
 		String shutDownTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
 		Log.i(TAG, "启动关闭中...");
 		Log.i(TAG, shutDownTime);
-
-
-//		File file = new File("/sdcard/b.txt");
-//		if (file.exists()) {
-//			file.delete();
-//		}
-
 		
 		try {
 			FileOutputStream fs = new FileOutputStream(

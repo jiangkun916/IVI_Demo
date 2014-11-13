@@ -32,7 +32,7 @@ public class ProcessorService extends IntentService{
 			
 			//1. 收集数据  定时发送
 			Log.i(TAG ,"------ACTION_MSG_BOOT-------");
-
+			
 			String powerOnTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
 
 			try {
@@ -44,6 +44,8 @@ public class ProcessorService extends IntentService{
 			}
 			
 			DataCollector.set(this);
+			
+			
 
 		}
 	} 	

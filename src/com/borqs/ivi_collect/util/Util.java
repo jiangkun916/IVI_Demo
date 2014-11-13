@@ -75,15 +75,198 @@ public class Util {
 		public static final String TIME = "time";
 		public static final String GPS = "gps";
 		public static final String STATUS = "status";
+		public static final String COL_ID = "_id";
+
 
 	}
+	public static class Report{
+		
+		public String tuid = null;
+		public String _id = null;
 
+		public String lng1 = null;
+		public String lat1= null;
+		public String time1 = null;
+		
+		public String lng2 = null;
+		public String lat2= null;
+		public String time2 = null;
+		
+		public String lng3 = null;
+		public String lat3= null;
+		public String time3 = null;
+		
+		public String lng4 = null;
+		public String lat4= null;
+		public String time4 = null;
+		
+		public String lng5 = null;
+		public String lat5= null;
+		public String time5 = null;
+
+		public String getId() {
+			return _id;
+		}
+		public void setId(String _id) {
+			this._id = _id;
+		}
+
+		
+		public String getTuid() {
+			return tuid;
+		}
+		public void setTuid(String tuid) {
+			this.tuid = tuid;
+		}
+		
+		
+		public String getLng1() {
+			return lng1;
+		}
+		public void setLng1(String lng1) {
+			this.lng1 = lng1;
+		}
+		
+		
+		public String getLng2() {
+			return lng2;
+		}
+		public void setLng2(String lng2) {
+			this.lng2 = lng2;
+		}
+		
+		
+		public String getLng3() {
+			return lng3;
+		}
+		public void setLng3(String lng3) {
+			this.lng3 = lng3;
+		}
+		
+		
+		public String getLng4() {
+			return lng4;
+		}
+		public void setLng4(String lng4) {
+			this.lng4 = lng4;
+		}
+		
+		
+		public String getLng5() {
+			return lng5;
+		}
+		public void setLng5(String lng5) {
+			this.lng5 = lng5;
+		}
+		
+		
+		public String getLat1() {
+			return lat1;
+		}
+		public void setLat1(String lat1) {
+			this.lat1 = lat1;
+		}
+		
+		
+		public String getLat2() {
+			return lat2;
+		}
+		public void setLat2(String lat2) {
+			this.lat2 = lat2;
+		}
+		
+		
+		public String getLat3() {
+			return lat3;
+		}
+		public void setLat3(String lat3) {
+			this.lat3 = lat3;
+		}
+		
+		
+		public String getLat4() {
+			return lat4;
+		}
+		public void setLat4(String lat4) {
+			this.lat4 = lat4;
+		}
+		
+		
+		public String getLat5() {
+			return lat1;
+		}
+		public void setLat5(String lat5) {
+			this.lat5 = lat5;
+		}
+		
+		
+		public String getTime1() {
+			return time1;
+		}
+		public void setTime1(String time1) {
+			this.time1 = time1;
+		}
+		
+		
+		public String getTime2() {
+			return time2;
+		}
+		public void setTime2(String time2) {
+			this.time2 = time2;
+		}
+		
+		
+		public String getTime3() {
+			return time3;
+		}
+		public void setTime3(String time3) {
+			this.time3 = time3;
+		}
+		
+		
+		public String getTime4() {
+			return time4;
+		}
+		public void setTime4(String time4) {
+			this.time4 = time4;
+		}
+		
+		
+		public String getTime5() {
+			return time5;
+		}
+		public void setTime5(String time5) {
+			this.time5 = time5;
+		}
+		
+		
+		public String toString() {
+			return "report [tudi=" + tuid 
+					+ ", time1=" + time1 + ", lng1=" + lng1 + ", lat1=" + lat1
+					+ ", time2=" + time2 + ", lng2=" + lng2 + ", lat2=" + lat2
+					+ ", time3=" + time3 + ", lng3=" + lng3 + ", lat3=" + lat3
+					+ ", time4=" + time4 + ", lng4=" + lng4 + ", lat4=" + lat4
+					+ ", time5=" + time5 + ", lng5=" + lng5 + ", lat5=" + lat5
+					+ "]";
+		}
+	}
+	
+	
 	public static class ReportLittleData {
 
 		public String tuid = null;
 		public String Longitude = null;
 		public String Latitude = null;
 		public String time = null;
+		public String _id = null;
+
+		public String getId() {
+			return _id;
+		}
+
+		public void setId(String _id) {
+			this._id = _id;
+		}
 
 		public String getTuid() {
 			return tuid;
@@ -95,7 +278,7 @@ public class Util {
 
 		public String getSendTime() {
 			return time;
-		}
+		}	
 
 		public void setSendTime(String time) {
 			this.time = time;
@@ -141,7 +324,16 @@ public class Util {
 		public String model = null;
 		public String poweron = null;
 		public String lastpoweroff = null;
+		public String _id = null;
 
+		public String getId() {
+			return _id;
+		}
+
+		public void setId(String _id) {
+			this._id = _id;
+		}
+		
 		public String getSendTime() {
 			return time;
 		}
@@ -421,42 +613,42 @@ public class Util {
 	
 	
 	
-	public static void read(String path) {
-		String temp = null;
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					new FileInputStream(path)));
-			while ((temp = br.readLine()) != null) {
-				list.add(temp);
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static void write(String path){
-		try {
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path)));
-			for(int i = 0; i<list.size() ; i++){
-				pw.println(list.get(i));
-				pw.flush();
-			}
-			pw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	public static void delete(int line){
-		list.remove(line - 1);
-	}
-	//添加到最后
-	public static void addToFinal(String s){
-		list.add(s);
-	}
-	public static void add(int line , String s){
-		list.add(line-1, s);
-	}
+//	public static void read(String path) {
+//		String temp = null;
+//		try {
+//			BufferedReader br = new BufferedReader(new InputStreamReader(
+//					new FileInputStream(path)));
+//			while ((temp = br.readLine()) != null) {
+//				list.add(temp);
+//			}
+//			br.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	
+//	public static void write(String path){
+//		try {
+//			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path)));
+//			for(int i = 0; i<list.size() ; i++){
+//				pw.println(list.get(i));
+//				pw.flush();
+//			}
+//			pw.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
+//	public static void delete(int line){
+//		list.remove(line - 1);
+//	}
+//	//添加到最后
+//	public static void addToFinal(String s){
+//		list.add(s);
+//	}
+//	public static void add(int line , String s){
+//		list.add(line-1, s);
+//	}
 	
 	
 	
@@ -482,20 +674,20 @@ public class Util {
 	}
 	
 	// 计算方位角pab。
-	public static double gps2d(double lat_a, double lng_a, double lat_b, double lng_b) {
-       double d = 0;
-       lat_a=lat_a*Math.PI/180;
-       lng_a=lng_a*Math.PI/180;
-       lat_b=lat_b*Math.PI/180;
-       lng_b=lng_b*Math.PI/180;
-      
-       d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
-       d=Math.sqrt(1-d*d);
-       d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
-       d=Math.asin(d)*180/Math.PI;
-      
-       return d;
-    }
+//	public static double gps2d(double lat_a, double lng_a, double lat_b, double lng_b) {
+//       double d = 0;
+//       lat_a=lat_a*Math.PI/180;
+//       lng_a=lng_a*Math.PI/180;
+//       lat_b=lat_b*Math.PI/180;
+//       lng_b=lng_b*Math.PI/180;
+//      
+//       d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
+//       d=Math.sqrt(1-d*d);
+//       d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
+//       d=Math.asin(d)*180/Math.PI;
+//      
+//       return d;
+//    }
 
 	
 }
