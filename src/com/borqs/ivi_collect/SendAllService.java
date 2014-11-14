@@ -47,7 +47,7 @@ public class SendAllService extends IntentService {
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery("SELECT * FROM all_information", null);
 			ReportData result = new ReportData();
-			
+
 			if (cursor.moveToFirst()) {
 
 				result.setId(cursor.getString(cursor
@@ -77,26 +77,23 @@ public class SendAllService extends IntentService {
 
 			}
 
-			try {
-				// Convert report data to JSON string
-				NameValuePair reportJsonString = ConvertToJSONString(result);
-				if (reportJsonString == null) {
-					return;
-				}
-				String id = result.getId();
-				// Send report to server
-				long newStatus = -1;
-				newStatus = Util.sendReport(serverUrl, reportJsonString);
-				Log.i(TAG, "-----newStatus----->>" + newStatus);
-				
-				if (newStatus == 0) {
-					Util.FirstSend = false;
-					db.delete("all_information", Util.ExtraKeys.COL_ID + "=" + id, null);
-					Log.i(TAG, "------id------>>" + id);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
+			// Convert report data to JSON string
+			NameValuePair reportJsonString = ConvertToJSONString(result);
+			if (reportJsonString == null) {
+				return;
 			}
+			String id = result.getId();
+			// Send report to server
+			long newStatus = -1;
+			newStatus = Util.sendReport(serverUrl, reportJsonString);
+			Log.i(TAG, "-----newStatus----->>" + newStatus);
+
+			if (newStatus == 0) {
+				Util.FirstSend = false;
+				db.delete("all_information", Util.ExtraKeys.COL_ID + "=" + id, null);
+				Log.i(TAG, "------id------>>" + id);
+			}
+
 			cursor.close();
 			cursor = null;
 			db.close();

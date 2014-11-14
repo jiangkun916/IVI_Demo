@@ -113,14 +113,6 @@ public class SendLittleService extends IntentService {
 			report.setLat5(lat[4]);
 			report.setTime5(time[4]);
 			
-//			NameValuePair reportJsonString = ConvertToJSONString(report);
-			
-//			db.execSQL("DELETE FROM all_information where _id<="+id);
-//			
-//			cursor.close();
-//			cursor = null;
-//			db.close();
-			
 			try {
 				// Convert report data to JSON string
 				NameValuePair reportJsonString = ConvertToJSONString(report);
