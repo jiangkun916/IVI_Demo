@@ -49,11 +49,12 @@ public class SendLittleService extends IntentService {
 				Log.i(TAG, "Network is not available.");
 				return;
 			}
+			
 			// TODO: cpu判断
 
 
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-			Cursor cursor = db.rawQuery("SELECT * FROM all_information", null);
+			Cursor cursor = db.rawQuery("SELECT * FROM part_information", null);
 					
 			int count = cursor.getCount();
 			
@@ -125,7 +126,7 @@ public class SendLittleService extends IntentService {
 				Log.i(TAG, "-----newStatus----->>" + newStatus);
 				
 				if (newStatus == 0) {
-					db.execSQL("DELETE FROM all_information where _id<="+id);
+					db.execSQL("DELETE FROM part_information where _id<="+id);
 					Log.i(TAG, "------id------>>" + id);
 				}
 			} catch (Exception e) {

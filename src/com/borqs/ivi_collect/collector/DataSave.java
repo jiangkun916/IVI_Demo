@@ -37,23 +37,30 @@ public class DataSave extends IntentService {
 			return;
 		}
 		if (action.equals(Util.Action.DATA_SAVE)) {
+			if (Util.FirstSend) {
+				tuid = intent.getStringExtra(Util.ExtraKeys.TUID);
+				imsi = intent.getStringExtra(Util.ExtraKeys.IMSI);
+				imei = intent.getStringExtra(Util.ExtraKeys.IMEI);
+				Longitude = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
+				Latitude = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
+				build = intent.getStringExtra(Util.ExtraKeys.BUILD);
+				model = intent.getStringExtra(Util.ExtraKeys.MODEL);
+				poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
+				lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
+				time = intent.getStringExtra(Util.ExtraKeys.TIME);
 
-			tuid = intent.getStringExtra(Util.ExtraKeys.TUID);
-			imsi = intent.getStringExtra(Util.ExtraKeys.IMSI);
-			imei = intent.getStringExtra(Util.ExtraKeys.IMEI);
-			Longitude = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
-			Latitude = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
-			build = intent.getStringExtra(Util.ExtraKeys.BUILD);
-			model = intent.getStringExtra(Util.ExtraKeys.MODEL);
-			poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
-			lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
-			time = intent.getStringExtra(Util.ExtraKeys.TIME);
+				addAllInformation(tuid, imsi, imei, build, model, poweron,
+						lastpoweroff, Longitude, Latitude, time);
+			} else {
+				tuid = intent.getStringExtra(Util.ExtraKeys.TUID);
+				poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
+				lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
+				time = intent.getStringExtra(Util.ExtraKeys.TIME);
 
-			addAllInformation(tuid, imsi, imei, build, model, poweron,
-					lastpoweroff, Longitude, Latitude, time);
+				addPartInformation(tuid, Longitude, Latitude, time);
+			}
 
 		}
-
 	}
 
 	/**
@@ -62,89 +69,47 @@ public class DataSave extends IntentService {
 	public void addAllInformation(String tuid, String imsi, String imei,
 			String build, String model, String poweron, String lastpoweroff,
 			String Longitude, String Latitude, String time) {
-
-		Intent target = new Intent();
+		
+		Log.i(TAG, "first send");
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM all_information", null);
 		int count = c.getCount();
 		Log.i(TAG, "---------count---------->>" + count);
-		if (count >= 100) {
-			if(c.moveToFirst()){
-				//删除前50条数据
+
+		if (count >= 300) {
+			if (c.moveToFirst()) {
+				// 删除前150条数据
 				String idFirst = c.getString(c.getColumnIndex(Util.ExtraKeys.COL_ID));
-				Log.i(TAG, "----idFirst----->>"+idFirst);
-				db.execSQL("DELETE FROM all_information where _id <= "+(Integer.parseInt(idFirst)+count/2));
-				Log.i(TAG, "----_id----->>"+(Integer.parseInt(idFirst)+count/2));
+				Log.i(TAG, "----idFirst----->>" + idFirst);
+				db.execSQL("DELETE FROM all_information where _id <= "+ (Integer.parseInt(idFirst) + count / 2));
+				Log.i(TAG, "----_id----->>"+ (Integer.parseInt(idFirst) + count / 2));
+			} else {
+				db.execSQL("DELETE FROM all_information ");
 			}
 		}
-		if (Util.FirstSend) {
-			ContentValues values = new ContentValues();
-			values.put(Util.ExtraKeys.TUID, tuid);
-			values.put(Util.ExtraKeys.IMSI, imsi);
-			values.put(Util.ExtraKeys.IMEI, imei);
-			values.put(Util.ExtraKeys.BUILD, build);
-			values.put(Util.ExtraKeys.MODEL, model);
-			values.put(Util.ExtraKeys.POWERON, poweron);
-			values.put(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
-			values.put(Util.ExtraKeys.LONGITUDE, Longitude);
-			values.put(Util.ExtraKeys.LATITUDE, Latitude);
-			values.put(Util.ExtraKeys.TIME, time);
-			Log.i(TAG, "--------values---------->>" + values);
-			db.insert("all_information", null, values);
 
-			Util.Longitude = Longitude;
-			Log.i(TAG, "---------addAllInformation---------->>"
-					+ Util.Longitude);
-			Util.Latitude = Latitude;
-			Log.i(TAG, "---------addAllInformation---------->>" + Util.Latitude);
+		ContentValues values = new ContentValues();
+		values.put(Util.ExtraKeys.TUID, tuid);
+		values.put(Util.ExtraKeys.IMSI, imsi);
+		values.put(Util.ExtraKeys.IMEI, imei);
+		values.put(Util.ExtraKeys.BUILD, build);
+		values.put(Util.ExtraKeys.MODEL, model);
+		values.put(Util.ExtraKeys.POWERON, poweron);
+		values.put(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
+		values.put(Util.ExtraKeys.LONGITUDE, Longitude);
+		values.put(Util.ExtraKeys.LATITUDE, Latitude);
+		values.put(Util.ExtraKeys.TIME, time);
+		Log.i(TAG, "--------values---------->>" + values);
+		db.insert("all_information", null, values);
+		Util.FirstSend = false;
 
-			Log.i(TAG, "first send");
-			target.setAction(Util.Action.SEND_ALL_REPORT);
+		Util.Longitude = Longitude;
+		Log.i(TAG, "---------addAllInformation---------->>" + Util.Longitude);
+		Util.Latitude = Latitude;
+		Log.i(TAG, "---------addAllInformation---------->>" + Util.Latitude);
 
-		} else {
-			ContentValues values = new ContentValues();
-			values.put(Util.ExtraKeys.TUID, tuid);
-			values.put(Util.ExtraKeys.IMSI, imsi);
-			values.put(Util.ExtraKeys.IMEI, imei);
-			values.put(Util.ExtraKeys.BUILD, build);
-			values.put(Util.ExtraKeys.MODEL, model);
-			values.put(Util.ExtraKeys.POWERON, poweron);
-			values.put(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
-			values.put(Util.ExtraKeys.LONGITUDE, Longitude);
-			values.put(Util.ExtraKeys.LATITUDE, Latitude);
-			values.put(Util.ExtraKeys.TIME, time);
-			Log.i(TAG, "not first send");
-
-			Log.i(TAG, "------------------->>" + values);
-			db.insert("all_information", null, values);
-			target.setAction(Util.Action.SEND_LITTLE_REPORT);
-
-			// double lo1 = Double.parseDouble(Util.Longitude);
-			// Log.i(TAG, "---------lo1---------->>" + lo1);
-			//
-			// double la1 = Double.parseDouble(Util.Latitude);
-			// Log.i(TAG, "---------la1---------->>" + la1);
-			//
-			// double lo2 = Double.parseDouble(Longitude);
-			// Log.i(TAG, "---------lo2---------->>" + lo2);
-			//
-			// double la2 = Double.parseDouble(Latitude);
-			// Log.i(TAG, "---------la2---------->>" + la2);
-			//
-			// if (Util.getDistance(lo1, la1, lo2, la2) >= 100) {
-			// Log.i(TAG, "------------------->>" + values);
-			// db.insert("part_information", null, values);
-			//
-			//
-			// Util.Longitude = Longitude;
-			// Log.i(TAG, "--------addPartInformation----------->>"+
-			// Util.Longitude);
-			// Util.Latitude = Latitude;
-			// Log.i(TAG, "--------addPartInformation----------->>"+
-			// Util.Latitude);
-			//
-			// }
-		}
+		Intent target = new Intent();
+		target.setAction(Util.Action.SEND_ALL_REPORT);
 		startService(target);
 
 		c.close();
@@ -158,16 +123,23 @@ public class DataSave extends IntentService {
 	 */
 	public void addPartInformation(String tuid, String Longitude,
 			String Latitude, String time) {
-
+		
+		Log.i(TAG, "not first send");
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-
-		Cursor c = db.rawQuery("SELECT * FROM all_information", null);
+		Cursor c = db.rawQuery("SELECT * FROM part_information", null);
 		int count = c.getCount();
 		Log.i(TAG, "---------count---------->>" + count);
-		if (count > 10000) {
-
-			db.execSQL("DELETE FROM part_information");
-
+		
+		if (count >= 10000) {
+			if (c.moveToFirst()) {
+				// 删除前5000条数据
+				String idFirst = c.getString(c.getColumnIndex(Util.ExtraKeys.COL_ID));
+				Log.i(TAG, "----idFirst----->>" + idFirst);
+				db.execSQL("DELETE FROM part_information where _id <= "+ (Integer.parseInt(idFirst) + count / 2));
+				Log.i(TAG, "----_id----->>"+ (Integer.parseInt(idFirst) + count / 2));
+			} else {
+				db.execSQL("DELETE FROM part_information");
+			}
 		}
 
 		ContentValues values = new ContentValues();
@@ -175,34 +147,39 @@ public class DataSave extends IntentService {
 		values.put(Util.ExtraKeys.LONGITUDE, Longitude);
 		values.put(Util.ExtraKeys.LATITUDE, Latitude);
 		values.put(Util.ExtraKeys.TIME, time);
+		Log.i(TAG, "------------------->>" + values);
 
-		double lo1 = Double.parseDouble(Util.Longitude);
-		Log.i(TAG, "---------lo1---------->>" + lo1);
+		db.insert("part_information", null, values);
 
-		double la1 = Double.parseDouble(Util.Latitude);
-		Log.i(TAG, "---------la1---------->>" + la1);
+		
+//		double lo1 = Double.parseDouble(Util.Longitude);
+//		Log.i(TAG, "---------lo1---------->>" + lo1);
+//
+//		double la1 = Double.parseDouble(Util.Latitude);
+//		Log.i(TAG, "---------la1---------->>" + la1);
+//
+//		double lo2 = Double.parseDouble(Longitude);
+//		Log.i(TAG, "---------lo2---------->>" + lo2);
+//
+//		double la2 = Double.parseDouble(Latitude);
+//		Log.i(TAG, "---------la2---------->>" + la2);
+//
+//		if (Util.getDistance(lo1, la1, lo2, la2) >= 100) {
+//			db.insert("part_information", null, values);
+//
+//			Util.Longitude = Longitude;
+//			Log.i(TAG, "--------addPartInformation----------->>" + Util.Longitude);
+//			Util.Latitude = Latitude;
+//			Log.i(TAG, "--------addPartInformation----------->>" + Util.Latitude);
+//
+//		}
+		
+		Intent target = new Intent();
+		target.setAction(Util.Action.SEND_LITTLE_REPORT);
+		startService(target);
 
-		double lo2 = Double.parseDouble(Longitude);
-		Log.i(TAG, "---------lo2---------->>" + lo2);
-
-		double la2 = Double.parseDouble(Latitude);
-		Log.i(TAG, "---------la2---------->>" + la2);
-
-		if (Util.getDistance(lo1, la1, lo2, la2) >= 100) {
-			Log.i(TAG, "------------------->>" + values);
-			long rowId = db.insert("part_information", null, values);
-			Log.i(TAG, "------------------->>" + rowId);
-
-			Util.Longitude = Longitude;
-			Log.i(TAG, "--------addPartInformation----------->>"
-					+ Util.Longitude);
-			Util.Latitude = Latitude;
-			Log.i(TAG, "--------addPartInformation----------->>"
-					+ Util.Latitude);
-
-		}
 		c.close();
-
+		c = null;
 		db.close();
 	}
 

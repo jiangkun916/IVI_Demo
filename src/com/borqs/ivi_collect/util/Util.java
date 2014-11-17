@@ -26,6 +26,8 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
+import com.borqs.ivi_collect.database.DatabaseHelper;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -38,7 +40,6 @@ public class Util {
 	private static final double EARTH_RADIUS = 6378137.0;
 	public static String Longitude;
 	public static String Latitude;
-
 	
 	/**
 	 * 
@@ -689,5 +690,6 @@ public class Util {
 //       return d;
 //    }
 
+		
 	
 }

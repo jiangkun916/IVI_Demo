@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -31,9 +32,13 @@ public class ProcessorService extends IntentService{
 		if (action.equals(Util.Action.ACTION_MSG_BOOT)) {
 			
 			//1. 收集数据  定时发送
-			Log.i(TAG ,"------ACTION_MSG_BOOT-------");
 			
-			String powerOnTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+			Log.i(TAG ,"------sleep start-------");		
+			SystemClock.sleep(60*1000);		
+			Log.i(TAG ,"------sleep end-------");
+
+			
+			String powerOnTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()-60*1000));
 
 			try {
 				FileOutputStream fs = new FileOutputStream(new File("/sdcard/b.txt"));

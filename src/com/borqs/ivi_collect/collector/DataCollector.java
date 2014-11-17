@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 import com.borqs.ivi_collect.util.Util;
+import com.borqs.ivi_collect.util.UtilThread;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
@@ -46,13 +47,14 @@ public class DataCollector extends IntentService {
 
 		Intent target = new Intent();
 
-		poweron = getPowerOn();
 		tuid = getTuid();
 		build = getBuild_number();
 		model = getModel();
-		lastpoweroff = getLastPowerOff();
 		imsi = getImsi();
 		imei = getImei();
+
+		poweron = getPowerOn();
+		lastpoweroff = getLastPowerOff();
 		Longitude = getLongitude();
 		Latitude = getLatitude();
 		time = getCollectTime();
@@ -62,47 +64,65 @@ public class DataCollector extends IntentService {
 		// "---Longitude--->>"+Longitude+"---Latitude--->>"+Latitude);
 		// return;
 		// }
-
 		target.setAction(Util.Action.DATA_SAVE);
 
-		target.putExtra(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
-		Log.i(TAG, "---------------lastpowerof======" + lastpoweroff
-				+ "------------------------");
+		if (Util.FirstSend) {
 
-		target.putExtra(Util.ExtraKeys.POWERON, poweron);
-		Log.i(TAG, "---------------poweron======" + poweron
-				+ "------------------------");
+			target.putExtra(Util.ExtraKeys.LASTPOWEROFF, lastpoweroff);
+			Log.i(TAG, "---------------lastpowerof======" + lastpoweroff
+					+ "------------------------");
 
-		target.putExtra(Util.ExtraKeys.TUID, tuid);
-		Log.i(TAG, "---------------tuid======" + tuid
-				+ "------------------------");
+			target.putExtra(Util.ExtraKeys.POWERON, poweron);
+			Log.i(TAG, "---------------poweron======" + poweron
+					+ "------------------------");
 
-		target.putExtra(Util.ExtraKeys.IMSI, imsi);
-		Log.i(TAG, "---------------imsi======" + imsi
-				+ "------------------------");
+			target.putExtra(Util.ExtraKeys.TUID, tuid);
+			Log.i(TAG, "---------------tuid======" + tuid
+					+ "------------------------");
 
-		target.putExtra(Util.ExtraKeys.IMEI, imei);
-		Log.i(TAG, "---------------imei======" + imei
-				+ "------------------------");
+			target.putExtra(Util.ExtraKeys.IMSI, imsi);
+			Log.i(TAG, "---------------imsi======" + imsi
+					+ "------------------------");
 
-		target.putExtra(Util.ExtraKeys.LONGITUDE, Longitude);
-		Log.i(TAG, "---------------Longitude======" + Longitude
-				+ "--------------------");
+			target.putExtra(Util.ExtraKeys.IMEI, imei);
+			Log.i(TAG, "---------------imei======" + imei
+					+ "------------------------");
 
-		target.putExtra(Util.ExtraKeys.LATITUDE, Latitude);
-		Log.i(TAG, "---------------Latitude======" + Latitude
-				+ "---------------------");
+			target.putExtra(Util.ExtraKeys.LONGITUDE, Longitude);
+			Log.i(TAG, "---------------Longitude======" + Longitude
+					+ "--------------------");
 
-		target.putExtra(Util.ExtraKeys.TIME, time);
-		Log.i(TAG, "---------------time======" + time + "---------------------");
+			target.putExtra(Util.ExtraKeys.LATITUDE, Latitude);
+			Log.i(TAG, "---------------Latitude======" + Latitude
+					+ "---------------------");
 
-		target.putExtra(Util.ExtraKeys.BUILD, build);
-		Log.i(TAG, "---------------build======" + build + "--------");
+			target.putExtra(Util.ExtraKeys.TIME, time);
+			Log.i(TAG, "---------------time======" + time
+					+ "---------------------");
 
-		target.putExtra(Util.ExtraKeys.MODEL, model);
-		Log.i(TAG, "---------------model======" + model
-				+ "----------------------");
+			target.putExtra(Util.ExtraKeys.BUILD, build);
+			Log.i(TAG, "---------------build======" + build + "--------");
 
+			target.putExtra(Util.ExtraKeys.MODEL, model);
+			Log.i(TAG, "---------------model======" + model
+					+ "----------------------");
+		}else{
+			target.putExtra(Util.ExtraKeys.TUID, tuid);
+			Log.i(TAG, "---------------tuid======" + tuid
+					+ "------------------------");
+			
+			target.putExtra(Util.ExtraKeys.LONGITUDE, Longitude);
+			Log.i(TAG, "---------------Longitude======" + Longitude
+					+ "--------------------");
+
+			target.putExtra(Util.ExtraKeys.LATITUDE, Latitude);
+			Log.i(TAG, "---------------Latitude======" + Latitude
+					+ "---------------------");
+
+			target.putExtra(Util.ExtraKeys.TIME, time);
+			Log.i(TAG, "---------------time======" + time
+					+ "---------------------");
+		}
 
 		startService(target);
 
@@ -123,7 +143,6 @@ public class DataCollector extends IntentService {
 				liveTimeTriger);
 
 	}
-
 
 	// get imsi
 	private String getImsi() {

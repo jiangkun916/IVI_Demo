@@ -26,78 +26,90 @@ public class SendAllService extends IntentService {
 		super(TAG);
 	}
 
+	private static SendAllService sendall;
+
+	public static SendAllService getContext() {
+		return sendall;
+	}
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		mOpenHelper = new DatabaseHelper(this);
 
-		// Get action, and make sure it's not null or 0-length
-		String action = intent.getAction();
-		if (TextUtils.isEmpty(action)) {
-			return;
-		}
-		if (action.equals(Util.Action.SEND_ALL_REPORT)) {
+		super.onCreate();
+		sendall = this;
+		// mOpenHelper = new DatabaseHelper(this);
+		//
+		// // Get action, and make sure it's not null or 0-length
+		// String action = intent.getAction();
+		// if (TextUtils.isEmpty(action)) {
+		// return;
+		// }
+		// if (action.equals(Util.Action.SEND_ALL_REPORT)) {
+		//
+		// // Check if the network is available
+		// if (!Util.isNetworkAvailable(this)) {
+		// Log.i(TAG, "Network is not available.");
+		// return;
+		// }
+		// // TODO: cpu判断
+		//
+		// SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+		// Cursor cursor = db.rawQuery("SELECT * FROM all_information", null);
+		// ReportData result = new ReportData();
+		//
+		// if (cursor.moveToFirst()) {
+		//
+		// result.setId(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.COL_ID)));
+		// result.setTuid(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.TUID)));
+		// result.setImsi(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.IMSI)));
+		// result.setImei(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.IMEI)));
+		// result.setBuild(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.BUILD)));
+		// result.setModel(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.MODEL)));
+		// result.setPowerOn(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.POWERON)));
+		// result.setLastPowerOff(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.LASTPOWEROFF)));
+		// result.setLongitude(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.LONGITUDE)));
+		// result.setLatitude(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.LATITUDE)));
+		// result.setSendTime(cursor.getString(cursor
+		// .getColumnIndex(Util.ExtraKeys.TIME)));
+		//
+		// Log.i(TAG, result.toString());
+		//
+		// }
+		//
+		// // Convert report data to JSON string
+		// NameValuePair reportJsonString = ConvertToJSONString(result);
+		// if (reportJsonString == null) {
+		// return;
+		// }
+		// String id = result.getId();
+		// // Send report to server
+		// long newStatus = -1;
+		// newStatus = Util.sendReport(serverUrl, reportJsonString);
+		// Log.i(TAG, "-----newStatus----->>" + newStatus);
+		//
+		// if (newStatus == 0) {
+		// Util.FirstSend = false;
+		// db.delete("all_information", Util.ExtraKeys.COL_ID + "=" + id, null);
+		// Log.i(TAG, "------id------>>" + id);
+		// }
+		//
+		// cursor.close();
+		// cursor = null;
+		// db.close();
+		// }
 
-			// Check if the network is available
-			if (!Util.isNetworkAvailable(this)) {
-				Log.i(TAG, "Network is not available.");
-				return;
-			}
-			// TODO: cpu判断
-
-			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-			Cursor cursor = db.rawQuery("SELECT * FROM all_information", null);
-			ReportData result = new ReportData();
-
-			if (cursor.moveToFirst()) {
-
-				result.setId(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.COL_ID)));
-				result.setTuid(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.TUID)));
-				result.setImsi(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.IMSI)));
-				result.setImei(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.IMEI)));
-				result.setBuild(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.BUILD)));
-				result.setModel(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.MODEL)));
-				result.setPowerOn(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.POWERON)));
-				result.setLastPowerOff(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.LASTPOWEROFF)));
-				result.setLongitude(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.LONGITUDE)));
-				result.setLatitude(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.LATITUDE)));
-				result.setSendTime(cursor.getString(cursor
-						.getColumnIndex(Util.ExtraKeys.TIME)));
-
-				Log.i(TAG, result.toString());
-
-			}
-
-			// Convert report data to JSON string
-			NameValuePair reportJsonString = ConvertToJSONString(result);
-			if (reportJsonString == null) {
-				return;
-			}
-			String id = result.getId();
-			// Send report to server
-			long newStatus = -1;
-			newStatus = Util.sendReport(serverUrl, reportJsonString);
-			Log.i(TAG, "-----newStatus----->>" + newStatus);
-
-			if (newStatus == 0) {
-				Util.FirstSend = false;
-				db.delete("all_information", Util.ExtraKeys.COL_ID + "=" + id, null);
-				Log.i(TAG, "------id------>>" + id);
-			}
-
-			cursor.close();
-			cursor = null;
-			db.close();
-		}
+		UtilThread u = new UtilThread();
+		u.start();
 	}
 
 	/**
