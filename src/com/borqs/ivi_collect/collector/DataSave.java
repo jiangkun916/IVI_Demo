@@ -46,15 +46,16 @@ public class DataSave extends IntentService {
 				build = intent.getStringExtra(Util.ExtraKeys.BUILD);
 				model = intent.getStringExtra(Util.ExtraKeys.MODEL);
 				poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
-				lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
+				lastpoweroff = intent
+						.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
 				time = intent.getStringExtra(Util.ExtraKeys.TIME);
 
 				addAllInformation(tuid, imsi, imei, build, model, poweron,
 						lastpoweroff, Longitude, Latitude, time);
 			} else {
 				tuid = intent.getStringExtra(Util.ExtraKeys.TUID);
-				poweron = intent.getStringExtra(Util.ExtraKeys.POWERON);
-				lastpoweroff = intent.getStringExtra(Util.ExtraKeys.LASTPOWEROFF);
+				Longitude = intent.getStringExtra(Util.ExtraKeys.LONGITUDE);
+				Latitude = intent.getStringExtra(Util.ExtraKeys.LATITUDE);
 				time = intent.getStringExtra(Util.ExtraKeys.TIME);
 
 				addPartInformation(tuid, Longitude, Latitude, time);
@@ -69,24 +70,30 @@ public class DataSave extends IntentService {
 	public void addAllInformation(String tuid, String imsi, String imei,
 			String build, String model, String poweron, String lastpoweroff,
 			String Longitude, String Latitude, String time) {
-		
+
 		Log.i(TAG, "first send");
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM all_information", null);
+
 		int count = c.getCount();
 		Log.i(TAG, "---------count---------->>" + count);
-
 		if (count >= 300) {
 			if (c.moveToFirst()) {
 				// 删除前150条数据
-				String idFirst = c.getString(c.getColumnIndex(Util.ExtraKeys.COL_ID));
+				String idFirst = c.getString(c
+						.getColumnIndex(Util.ExtraKeys.COL_ID));
 				Log.i(TAG, "----idFirst----->>" + idFirst);
-				db.execSQL("DELETE FROM all_information where _id <= "+ (Integer.parseInt(idFirst) + count / 2));
-				Log.i(TAG, "----_id----->>"+ (Integer.parseInt(idFirst) + count / 2));
+				db.execSQL("DELETE FROM all_information where _id <= "
+						+ (Integer.parseInt(idFirst) + count / 2));
+				Log.i(TAG, "----_id----->>"
+						+ (Integer.parseInt(idFirst) + count / 2));
 			} else {
 				db.execSQL("DELETE FROM all_information ");
 			}
 		}
+
+		c.close();
+		c = null;
 
 		ContentValues values = new ContentValues();
 		values.put(Util.ExtraKeys.TUID, tuid);
@@ -108,13 +115,12 @@ public class DataSave extends IntentService {
 		Util.Latitude = Latitude;
 		Log.i(TAG, "---------addAllInformation---------->>" + Util.Latitude);
 
+		db.close();
+
 		Intent target = new Intent();
 		target.setAction(Util.Action.SEND_ALL_REPORT);
 		startService(target);
-
-		c.close();
-		c = null;
-		db.close();
+		target = null;
 
 	}
 
@@ -123,24 +129,30 @@ public class DataSave extends IntentService {
 	 */
 	public void addPartInformation(String tuid, String Longitude,
 			String Latitude, String time) {
-		
+
 		Log.i(TAG, "not first send");
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		Cursor c = db.rawQuery("SELECT * FROM part_information", null);
+
 		int count = c.getCount();
 		Log.i(TAG, "---------count---------->>" + count);
-		
 		if (count >= 10000) {
 			if (c.moveToFirst()) {
 				// 删除前5000条数据
-				String idFirst = c.getString(c.getColumnIndex(Util.ExtraKeys.COL_ID));
+				String idFirst = c.getString(c
+						.getColumnIndex(Util.ExtraKeys.COL_ID));
 				Log.i(TAG, "----idFirst----->>" + idFirst);
-				db.execSQL("DELETE FROM part_information where _id <= "+ (Integer.parseInt(idFirst) + count / 2));
-				Log.i(TAG, "----_id----->>"+ (Integer.parseInt(idFirst) + count / 2));
+				db.execSQL("DELETE FROM part_information where _id <= "
+						+ (Integer.parseInt(idFirst) + count / 2));
+				Log.i(TAG, "----_id----->>"
+						+ (Integer.parseInt(idFirst) + count / 2));
 			} else {
 				db.execSQL("DELETE FROM part_information");
 			}
 		}
+
+		c.close();
+		c = null;
 
 		ContentValues values = new ContentValues();
 		values.put(Util.ExtraKeys.TUID, tuid);
@@ -151,36 +163,37 @@ public class DataSave extends IntentService {
 
 		db.insert("part_information", null, values);
 
-		
-//		double lo1 = Double.parseDouble(Util.Longitude);
-//		Log.i(TAG, "---------lo1---------->>" + lo1);
-//
-//		double la1 = Double.parseDouble(Util.Latitude);
-//		Log.i(TAG, "---------la1---------->>" + la1);
-//
-//		double lo2 = Double.parseDouble(Longitude);
-//		Log.i(TAG, "---------lo2---------->>" + lo2);
-//
-//		double la2 = Double.parseDouble(Latitude);
-//		Log.i(TAG, "---------la2---------->>" + la2);
-//
-//		if (Util.getDistance(lo1, la1, lo2, la2) >= 100) {
-//			db.insert("part_information", null, values);
-//
-//			Util.Longitude = Longitude;
-//			Log.i(TAG, "--------addPartInformation----------->>" + Util.Longitude);
-//			Util.Latitude = Latitude;
-//			Log.i(TAG, "--------addPartInformation----------->>" + Util.Latitude);
-//
-//		}
-		
+		// double lo1 = Double.parseDouble(Util.Longitude);
+		// Log.i(TAG, "---------lo1---------->>" + lo1);
+		//
+		// double la1 = Double.parseDouble(Util.Latitude);
+		// Log.i(TAG, "---------la1---------->>" + la1);
+		//
+		// double lo2 = Double.parseDouble(Longitude);
+		// Log.i(TAG, "---------lo2---------->>" + lo2);
+		//
+		// double la2 = Double.parseDouble(Latitude);
+		// Log.i(TAG, "---------la2---------->>" + la2);
+		//
+		// if (Util.getDistance(lo1, la1, lo2, la2) >= 100) {
+		// db.insert("part_information", null, values);
+		//
+		// Util.Longitude = Longitude;
+		// Log.i(TAG, "--------addPartInformation----------->>" +
+		// Util.Longitude);
+		// Util.Latitude = Latitude;
+		// Log.i(TAG, "--------addPartInformation----------->>" +
+		// Util.Latitude);
+		//
+		// }
+
+		db.close();
+
 		Intent target = new Intent();
 		target.setAction(Util.Action.SEND_LITTLE_REPORT);
 		startService(target);
+		target = null;
 
-		c.close();
-		c = null;
-		db.close();
 	}
 
 }

@@ -10,10 +10,10 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
 	private static final int DATABASE_VERSION = 1;
-	private static final String TAG = "DatabaseHelper";
 	private static final String DATABASE_NAME = "ivi_collect.db";
-	private static final String ALL_INFORMATION = "all_information";
-	private static final String PART_INFORMATION = "part_information";
+	private final String TAG = "DatabaseHelper";
+	private final String ALL_INFORMATION = "all_information";
+	private final String PART_INFORMATION = "part_information";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

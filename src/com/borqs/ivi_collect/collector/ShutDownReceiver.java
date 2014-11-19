@@ -1,34 +1,39 @@
 package com.borqs.ivi_collect.collector;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
+
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 public class ShutDownReceiver extends BroadcastReceiver {
 	
-	private static final String TAG = "ShutDownReceiver";
+	private final String TAG = "ShutDownReceiver";
 	@Override
 	public void onReceive(Context context, Intent intent) {
+//		intent.ACTION_SHUTDOWN;
+//		String shutDownTime = Long.toString(System.currentTimeMillis());
+//		Log.i(TAG, "启动关闭中...");
+//		Log.i(TAG, shutDownTime);
+//		
+//		try {
+//			FileOutputStream fs = new FileOutputStream(
+//					new File("/sdcard/a.txt"));
+//			fs.write(shutDownTime.getBytes());
+//			fs.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
 
-		String shutDownTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()));
+		
+
+		String shutDownTime = Long.toString(System.currentTimeMillis()); 
 		Log.i(TAG, "启动关闭中...");
 		Log.i(TAG, shutDownTime);
-		
-		try {
-			FileOutputStream fs = new FileOutputStream(
-					new File("/sdcard/a.txt"));
-			fs.write(shutDownTime.getBytes());
-			fs.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		Editor sharedata = context.getSharedPreferences("poweroff", Context.MODE_PRIVATE).edit();    
+		sharedata.putString("time",shutDownTime);    
+		sharedata.commit();
 	}
 }

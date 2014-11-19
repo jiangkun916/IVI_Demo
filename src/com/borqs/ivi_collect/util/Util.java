@@ -4,17 +4,13 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -26,8 +22,6 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.http.NameValuePair;
 import org.json.JSONObject;
 
-import com.borqs.ivi_collect.database.DatabaseHelper;
-
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -36,11 +30,11 @@ import android.util.Log;
 public class Util {
 	public static boolean FirstSend = true;
 	public static final String TAG = "Util";
-	public static List<String> list = new ArrayList<String>();
+	// public static List<String> list = new ArrayList<String>();
 	private static final double EARTH_RADIUS = 6378137.0;
 	public static String Longitude;
 	public static String Latitude;
-	
+
 	/**
 	 * 
 	 * Define the actions.
@@ -54,6 +48,8 @@ public class Util {
 		public static final String SEND_ALL_REPORT = "com.borqs.ivi_collect.SEND_ALL_REPORT";
 		public static final String SEND_LITTLE_REPORT = "com.borqs.ivi_collect.SEND_LITTLE_REPORT";
 		public static final String DATA_SAVE = "com.borqs.ivi_collect.DATA_SAVE";
+		public static final String POWER_OFF = "com.borqs.ivi_collect.POWER_OFF";
+		public static final String INSTALL_APK = "com.borqs.ivi_collect.INSTALL_APK";
 
 	}
 
@@ -72,243 +68,242 @@ public class Util {
 		public static final String BUILD = "build";
 		public static final String MODEL = "model";
 		public static final String POWERON = "poweron";
-		public static final String LASTPOWEROFF = "lastpowerof";
+		public static final String LASTPOWEROFF = "lastpoweroff";
 		public static final String TIME = "time";
 		public static final String GPS = "gps";
-		public static final String STATUS = "status";
+		public static final String CODE = "code";
 		public static final String COL_ID = "_id";
-
+		public static final String TYPE = "type";
 
 	}
-	public static class Report{
-		
+
+	public static class Report {
+
 		public String tuid = null;
 		public String _id = null;
 
 		public String lng1 = null;
-		public String lat1= null;
+		public String lat1 = null;
 		public String time1 = null;
-		
+
 		public String lng2 = null;
-		public String lat2= null;
+		public String lat2 = null;
 		public String time2 = null;
-		
+
 		public String lng3 = null;
-		public String lat3= null;
+		public String lat3 = null;
 		public String time3 = null;
-		
+
 		public String lng4 = null;
-		public String lat4= null;
+		public String lat4 = null;
 		public String time4 = null;
-		
+
 		public String lng5 = null;
-		public String lat5= null;
+		public String lat5 = null;
 		public String time5 = null;
 
 		public String getId() {
 			return _id;
 		}
+
 		public void setId(String _id) {
 			this._id = _id;
 		}
 
-		
 		public String getTuid() {
 			return tuid;
 		}
+
 		public void setTuid(String tuid) {
 			this.tuid = tuid;
 		}
-		
-		
+
 		public String getLng1() {
 			return lng1;
 		}
+
 		public void setLng1(String lng1) {
 			this.lng1 = lng1;
 		}
-		
-		
+
 		public String getLng2() {
 			return lng2;
 		}
+
 		public void setLng2(String lng2) {
 			this.lng2 = lng2;
 		}
-		
-		
+
 		public String getLng3() {
 			return lng3;
 		}
+
 		public void setLng3(String lng3) {
 			this.lng3 = lng3;
 		}
-		
-		
+
 		public String getLng4() {
 			return lng4;
 		}
+
 		public void setLng4(String lng4) {
 			this.lng4 = lng4;
 		}
-		
-		
+
 		public String getLng5() {
 			return lng5;
 		}
+
 		public void setLng5(String lng5) {
 			this.lng5 = lng5;
 		}
-		
-		
+
 		public String getLat1() {
 			return lat1;
 		}
+
 		public void setLat1(String lat1) {
 			this.lat1 = lat1;
 		}
-		
-		
+
 		public String getLat2() {
 			return lat2;
 		}
+
 		public void setLat2(String lat2) {
 			this.lat2 = lat2;
 		}
-		
-		
+
 		public String getLat3() {
 			return lat3;
 		}
+
 		public void setLat3(String lat3) {
 			this.lat3 = lat3;
 		}
-		
-		
+
 		public String getLat4() {
 			return lat4;
 		}
+
 		public void setLat4(String lat4) {
 			this.lat4 = lat4;
 		}
-		
-		
+
 		public String getLat5() {
 			return lat1;
 		}
+
 		public void setLat5(String lat5) {
 			this.lat5 = lat5;
 		}
-		
-		
+
 		public String getTime1() {
 			return time1;
 		}
+
 		public void setTime1(String time1) {
 			this.time1 = time1;
 		}
-		
-		
+
 		public String getTime2() {
 			return time2;
 		}
+
 		public void setTime2(String time2) {
 			this.time2 = time2;
 		}
-		
-		
+
 		public String getTime3() {
 			return time3;
 		}
+
 		public void setTime3(String time3) {
 			this.time3 = time3;
 		}
-		
-		
+
 		public String getTime4() {
 			return time4;
 		}
+
 		public void setTime4(String time4) {
 			this.time4 = time4;
 		}
-		
-		
+
 		public String getTime5() {
 			return time5;
 		}
+
 		public void setTime5(String time5) {
 			this.time5 = time5;
 		}
-		
-		
+
 		public String toString() {
-			return "report [tudi=" + tuid 
-					+ ", time1=" + time1 + ", lng1=" + lng1 + ", lat1=" + lat1
-					+ ", time2=" + time2 + ", lng2=" + lng2 + ", lat2=" + lat2
-					+ ", time3=" + time3 + ", lng3=" + lng3 + ", lat3=" + lat3
-					+ ", time4=" + time4 + ", lng4=" + lng4 + ", lat4=" + lat4
-					+ ", time5=" + time5 + ", lng5=" + lng5 + ", lat5=" + lat5
-					+ "]";
+			return "report [tudi=" + tuid + ", time1=" + time1 + ", lng1="
+					+ lng1 + ", lat1=" + lat1 + ", time2=" + time2 + ", lng2="
+					+ lng2 + ", lat2=" + lat2 + ", time3=" + time3 + ", lng3="
+					+ lng3 + ", lat3=" + lat3 + ", time4=" + time4 + ", lng4="
+					+ lng4 + ", lat4=" + lat4 + ", time5=" + time5 + ", lng5="
+					+ lng5 + ", lat5=" + lat5 + "]";
 		}
 	}
-	
-	
-	public static class ReportLittleData {
 
-		public String tuid = null;
-		public String Longitude = null;
-		public String Latitude = null;
-		public String time = null;
-		public String _id = null;
-
-		public String getId() {
-			return _id;
-		}
-
-		public void setId(String _id) {
-			this._id = _id;
-		}
-
-		public String getTuid() {
-			return tuid;
-		}
-
-		public void setTuid(String tuid) {
-			this.tuid = tuid;
-		}
-
-		public String getSendTime() {
-			return time;
-		}	
-
-		public void setSendTime(String time) {
-			this.time = time;
-		}
-
-		public String getLongitude() {
-			return Longitude;
-		}
-
-		public void setLongitude(String longitude) {
-			this.Longitude = longitude;
-		}
-
-		public String getLatitude() {
-			return Latitude;
-		}
-
-		public void setLatitude(String latitude) {
-			this.Latitude = latitude;
-		}
-
-		@Override
-		public String toString() {
-			return "ReportLittleData [tudi=" + tuid + ", time=" + time
-					+ ", Longitude=" + Longitude + ", Latitude=" + Latitude
-					+ "]";
-		}
-
-	}
+	// public static class ReportLittleData {
+	//
+	// public String tuid = null;
+	// public String Longitude = null;
+	// public String Latitude = null;
+	// public String time = null;
+	// public String _id = null;
+	//
+	// public String getId() {
+	// return _id;
+	// }
+	//
+	// public void setId(String _id) {
+	// this._id = _id;
+	// }
+	//
+	// public String getTuid() {
+	// return tuid;
+	// }
+	//
+	// public void setTuid(String tuid) {
+	// this.tuid = tuid;
+	// }
+	//
+	// public String getSendTime() {
+	// return time;
+	// }
+	//
+	// public void setSendTime(String time) {
+	// this.time = time;
+	// }
+	//
+	// public String getLongitude() {
+	// return Longitude;
+	// }
+	//
+	// public void setLongitude(String longitude) {
+	// this.Longitude = longitude;
+	// }
+	//
+	// public String getLatitude() {
+	// return Latitude;
+	// }
+	//
+	// public void setLatitude(String latitude) {
+	// this.Latitude = latitude;
+	// }
+	//
+	// @Override
+	// public String toString() {
+	// return "ReportLittleData [tudi=" + tuid + ", time=" + time
+	// + ", Longitude=" + Longitude + ", Latitude=" + Latitude
+	// + "]";
+	// }
+	//
+	// }
 
 	/**
 	 * Define report data structure.
@@ -334,7 +329,7 @@ public class Util {
 		public void setId(String _id) {
 			this._id = _id;
 		}
-		
+
 		public String getSendTime() {
 			return time;
 		}
@@ -512,16 +507,24 @@ public class Util {
 			// Transfer report stream
 			URL reportUrl = new URL(url);
 			conn = (HttpURLConnection) reportUrl.openConnection();
-			conn.setDoInput(true);// Set whether this URLConnection allows input.
-			conn.setDoOutput(true);// Set whether this URLConnection allows output.
-			conn.setUseCaches(false);// Set whether this connection allows to use caches or not.
-			conn.setConnectTimeout(30 * 1000);// Sets the maximum time to wait while connecting.
-			conn.setReadTimeout(30 * 1000);// Sets the maximum time to wait for an input stream read.
-			conn.setRequestProperty("Charset", "UTF-8");// Set the specified request header field.
+			conn.setDoInput(true);// Set whether this URLConnection allows
+									// input.
+			conn.setDoOutput(true);// Set whether this URLConnection allows
+									// output.
+			conn.setUseCaches(false);// Set whether this connection allows to
+										// use caches or not.
+			conn.setConnectTimeout(30 * 1000);// Sets the maximum time to wait
+												// while connecting.
+			conn.setReadTimeout(30 * 1000);// Sets the maximum time to wait for
+											// an input stream read.
+			conn.setRequestProperty("Charset", "UTF-8");// Set the specified
+														// request header field.
 			// conn.setRequestProperty("Client-Name", "ivi_collect");
-			conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
+			conn.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded");
 
-			writer = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+			writer = new BufferedWriter(new OutputStreamWriter(
+					conn.getOutputStream()));
 			writer.write(reportStr.toString());
 			writer.write("\n");
 			writer.flush();
@@ -537,7 +540,7 @@ public class Util {
 				Log.i(TAG, "feedback String is: " + feedbackStr);
 				JSONObject jsonObject = new JSONObject(feedbackStr);
 				id = Long
-						.parseLong(jsonObject.getString(Util.ExtraKeys.STATUS));
+						.parseLong(jsonObject.getString(Util.ExtraKeys.CODE));
 				Log.i(TAG, "Send report success,serverid = " + id);
 				break;
 			case 500:// HTTP status code, 500: Internal error
@@ -611,53 +614,49 @@ public class Util {
 		return stringBuffer.toString();
 	}
 
-	
-	
-	
-//	public static void read(String path) {
-//		String temp = null;
-//		try {
-//			BufferedReader br = new BufferedReader(new InputStreamReader(
-//					new FileInputStream(path)));
-//			while ((temp = br.readLine()) != null) {
-//				list.add(temp);
-//			}
-//			br.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	
-//	public static void write(String path){
-//		try {
-//			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(path)));
-//			for(int i = 0; i<list.size() ; i++){
-//				pw.println(list.get(i));
-//				pw.flush();
-//			}
-//			pw.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
-//	public static void delete(int line){
-//		list.remove(line - 1);
-//	}
-//	//添加到最后
-//	public static void addToFinal(String s){
-//		list.add(s);
-//	}
-//	public static void add(int line , String s){
-//		list.add(line-1, s);
-//	}
-	
-	
-	
+	// public static void read(String path) {
+	// String temp = null;
+	// try {
+	// BufferedReader br = new BufferedReader(new InputStreamReader(
+	// new FileInputStream(path)));
+	// while ((temp = br.readLine()) != null) {
+	// list.add(temp);
+	// }
+	// br.close();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// public static void write(String path){
+	// try {
+	// PrintWriter pw = new PrintWriter(new OutputStreamWriter(new
+	// FileOutputStream(path)));
+	// for(int i = 0; i<list.size() ; i++){
+	// pw.println(list.get(i));
+	// pw.flush();
+	// }
+	// pw.close();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// public static void delete(int line){
+	// list.remove(line - 1);
+	// }
+	// //添加到最后
+	// public static void addToFinal(String s){
+	// list.add(s);
+	// }
+	// public static void add(int line , String s){
+	// list.add(line-1, s);
+	// }
 
-	//获取两个gps之间的距离
-	public static double getDistance(double longitude1, double latitude1,double longitude2, double latitude2) {
-		//longitude1 latitude1   第一个经纬度
-		//longitude2 latitude2   第二个经纬度
+	// 获取两个gps之间的距离
+	public static double getDistance(double longitude1, double latitude1,
+			double longitude2, double latitude2) {
+		// longitude1 latitude1 第一个经纬度
+		// longitude2 latitude2 第二个经纬度
 		double Lat1 = rad(latitude1);
 		double Lat2 = rad(latitude2);
 		double a = Lat1 - Lat2;
@@ -673,23 +672,81 @@ public class Util {
 	private static double rad(double d) {
 		return d * Math.PI / 180.0;
 	}
-	
-	// 计算方位角pab。
-//	public static double gps2d(double lat_a, double lng_a, double lat_b, double lng_b) {
-//       double d = 0;
-//       lat_a=lat_a*Math.PI/180;
-//       lng_a=lng_a*Math.PI/180;
-//       lat_b=lat_b*Math.PI/180;
-//       lng_b=lng_b*Math.PI/180;
-//      
-//       d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
-//       d=Math.sqrt(1-d*d);
-//       d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
-//       d=Math.asin(d)*180/Math.PI;
-//      
-//       return d;
-//    }
 
-		
+	// 计算方位角pab。
+	// public static double gps2d(double lat_a, double lng_a, double lat_b,
+	// double lng_b) {
+	// double d = 0;
+	// lat_a=lat_a*Math.PI/180;
+	// lng_a=lng_a*Math.PI/180;
+	// lat_b=lat_b*Math.PI/180;
+	// lng_b=lng_b*Math.PI/180;
+	//
+	// d=Math.sin(lat_a)*Math.sin(lat_b)+Math.cos(lat_a)*Math.cos(lat_b)*Math.cos(lng_b-lng_a);
+	// d=Math.sqrt(1-d*d);
+	// d=Math.cos(lat_b)*Math.sin(lng_b-lng_a)/d;
+	// d=Math.asin(d)*180/Math.PI;
+	//
+	// return d;
+	// }
 	
+	
+	
+	
+
+	public static float getProcessCpuRate() {
+
+		float totalCpuTime1 = getTotalCpuTime();
+		float processCpuTime1 = getAppCpuTime();
+		try {
+			Thread.sleep(360);
+
+		} catch (Exception e) {
+		}
+
+		float totalCpuTime2 = getTotalCpuTime();
+		float processCpuTime2 = getAppCpuTime();
+
+		float cpuRate = 100 * (processCpuTime2 - processCpuTime1)
+				/ (totalCpuTime2 - totalCpuTime1);
+
+		return cpuRate;
+	}
+
+	public static long getTotalCpuTime() { // 获取系统总CPU使用时间
+		String[] cpuInfos = null;
+		try {
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream("/proc/stat")), 1000);
+			String load = reader.readLine();
+			reader.close();
+			cpuInfos = load.split(" ");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		long totalCpu = Long.parseLong(cpuInfos[2])
+				+ Long.parseLong(cpuInfos[3]) + Long.parseLong(cpuInfos[4])
+				+ Long.parseLong(cpuInfos[6]) + Long.parseLong(cpuInfos[5])
+				+ Long.parseLong(cpuInfos[7]) + Long.parseLong(cpuInfos[8]);
+		return totalCpu;
+	}
+
+	public static long getAppCpuTime() { // 获取应用占用的CPU时间
+		String[] cpuInfos = null;
+		try {
+			int pid = android.os.Process.myPid();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(
+					new FileInputStream("/proc/" + pid + "/stat")), 1000);
+			String load = reader.readLine();
+			reader.close();
+			cpuInfos = load.split(" ");
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		long appCpuTime = Long.parseLong(cpuInfos[13])
+				+ Long.parseLong(cpuInfos[14]) + Long.parseLong(cpuInfos[15])
+				+ Long.parseLong(cpuInfos[16]);
+		return appCpuTime;
+	}
+
 }

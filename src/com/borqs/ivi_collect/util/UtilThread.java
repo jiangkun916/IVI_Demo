@@ -18,7 +18,7 @@ public class UtilThread extends Thread {
 
 	private static final String TAG = "UtilThread";
 	private DatabaseHelper mOpenHelper;
-	private final static String serverUrl = "http://releaseadmin.borqs.com/su/gps.php";
+	private final String serverUrl = "http://releaseadmin.borqs.com/su/gps.php";
 
 	public void run() {
 
@@ -29,18 +29,16 @@ public class UtilThread extends Thread {
 			Log.i(TAG, "Network is not available.");
 			return;
 		}
+		// TODO: cpu判断
 
 		mOpenHelper = new DatabaseHelper(context);
 		SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 		Cursor cursor = db.rawQuery("SELECT * FROM all_information", null);
-
-		// TODO: cpu判断
-
 		int count = cursor.getCount();
 		Log.i(TAG, "-------count----------" + count);
 		ReportData[] result = new ReportData[count];
-		synchronized (result) {
 
+		synchronized (result) {
 			if (count > 0) {
 				if (cursor.moveToFirst()) {
 					for (int i = 0; i < count; i++) {
@@ -80,11 +78,13 @@ public class UtilThread extends Thread {
 							// Send report to server
 							String id = result[i].getId();
 							long newStatus = -1;
-							newStatus = Util.sendReport(serverUrl,reportJsonString);
+							newStatus = Util.sendReport(serverUrl,
+									reportJsonString);
 							Log.i(TAG, "-----newStatus----->>" + newStatus);
 
 							if (newStatus == 0) {
-								db.delete("all_information",Util.ExtraKeys.COL_ID + "=" + id, null);
+								db.delete("all_information",
+										Util.ExtraKeys.COL_ID + "=" + id, null);
 								Log.i(TAG, "------id------>>" + id);
 							}
 							cursor.moveToNext();
@@ -95,10 +95,13 @@ public class UtilThread extends Thread {
 					}
 				}
 			}
+
 		}
+
 		cursor.close();
 		cursor = null;
 		db.close();
+
 	}
 
 	/**
@@ -118,21 +121,20 @@ public class UtilThread extends Thread {
 			JSONObject gps = new JSONObject();
 
 			// Get gps
-			gps.put(Util.ExtraKeys.LONGITUDE, reportData.Longitude);
-			gps.put(Util.ExtraKeys.LATITUDE, reportData.Latitude);
-			gps.put(Util.ExtraKeys.TIME, reportData.time);
+			gps.put("lng", reportData.Longitude);
+			gps.put("lat", reportData.Latitude);
+			gps.put("t", reportData.time);
 
 			// Put these info to reportDataJSONString object
-			reportDataJSONString.put(Util.ExtraKeys.BUILD, reportData.build);
-			reportDataJSONString.put(Util.ExtraKeys.MODEL, reportData.model);
+			reportDataJSONString.put("B", reportData.build);
+			reportDataJSONString.put("M", reportData.model);
+			reportDataJSONString.put("on", reportData.poweron);
+			reportDataJSONString.put("off", reportData.lastpoweroff);
+			reportDataJSONString.put(Util.ExtraKeys.TYPE, "A");
 			reportDataJSONString.put(Util.ExtraKeys.TUID, reportData.tuid);
 			reportDataJSONString.put(Util.ExtraKeys.IMSI, reportData.imsi);
 			reportDataJSONString.put(Util.ExtraKeys.IMEI, reportData.imei);
 			reportDataJSONString.put(Util.ExtraKeys.GPS, gps);
-			reportDataJSONString
-					.put(Util.ExtraKeys.POWERON, reportData.poweron);
-			reportDataJSONString.put(Util.ExtraKeys.LASTPOWEROFF,
-					reportData.lastpoweroff);
 			NameValuePair nameValuePair = new BasicNameValuePair("info",
 					reportDataJSONString.toString());
 
@@ -143,6 +145,7 @@ public class UtilThread extends Thread {
 		} catch (JSONException je) {
 			return null;
 		}
+
 	}
 
 }

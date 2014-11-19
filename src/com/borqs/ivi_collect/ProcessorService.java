@@ -1,13 +1,10 @@
 package com.borqs.ivi_collect;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,22 +28,21 @@ public class ProcessorService extends IntentService{
 
 		if (action.equals(Util.Action.ACTION_MSG_BOOT)) {
 			
-			//1. 收集数据  定时发送
+			//1. 收集数据  定时发送Context.MODE_PRIVATE
 			
 			Log.i(TAG ,"------sleep start-------");		
 			SystemClock.sleep(60*1000);		
 			Log.i(TAG ,"------sleep end-------");
 
 			
-			String powerOnTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()-60*1000));
+//			String powerOnTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(System.currentTimeMillis()-60*1000));
 
-			try {
-				FileOutputStream fs = new FileOutputStream(new File("/sdcard/b.txt"));
-				fs.write(powerOnTime.getBytes());
-				fs.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			String powerOnTime = Long.toString((System.currentTimeMillis()-60*1000)); 
+
+			Editor sharedata = getSharedPreferences("poweron", Context.MODE_PRIVATE).edit();    
+			sharedata.putString("time",powerOnTime);    
+			sharedata.commit();
+
 			
 			DataCollector.set(this);
 			

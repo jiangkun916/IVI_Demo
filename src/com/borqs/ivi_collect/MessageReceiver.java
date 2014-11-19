@@ -16,12 +16,11 @@ import android.util.Log;
 
 public class MessageReceiver extends BroadcastReceiver {
 
-	private static final String TAG = "MessageReceiver";
+	private final String TAG = "MessageReceiver";
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		//Get action, and make sure it's not null or 0-length
-		
 		String action = intent.getAction();
 		if (TextUtils.isEmpty(action)) {
 			return;

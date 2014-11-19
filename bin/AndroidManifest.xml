@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.borqs.ivi_collect"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0"
+    android:sharedUserId="android.uid.system" >
 
     <supports-screens
         android:anyDensity="true"
@@ -22,6 +23,11 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    
+    <uses-permission android:name="android.permission.DELETE_PACKAGES" />
+    <uses-permission android:name="android.permission.INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -38,10 +44,14 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-        
         <receiver android:name=".collector.ShutDownReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".update.MyReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
 
@@ -51,28 +61,29 @@
                 <action android:name="com.borqs.ivi_collect.ACTION_MSG_BOOT" />
             </intent-filter>
         </service>
-        
         <service android:name=".SendAllService" >
             <intent-filter>
                 <action android:name="com.borqs.ivi_collect.SEND_ALL_REPORT" />
             </intent-filter>
         </service>
-        
         <service android:name=".SendLittleService" >
             <intent-filter>
                 <action android:name="com.borqs.ivi_collect.SEND_LITTLE_REPORT" />
             </intent-filter>
         </service>
-        
         <service android:name=".collector.DataCollector" >
             <intent-filter>
                 <action android:name="com.borqs.ivi_collect.DATA_REPORT" />
             </intent-filter>
         </service>
-        
-         <service android:name="com.borqs.ivi_collect.collector.DataSave" >
+        <service android:name=".collector.DataSave" >
             <intent-filter>
                 <action android:name="com.borqs.ivi_collect.DATA_SAVE" />
+            </intent-filter>
+        </service>
+        <service android:name=".update.ApkManagerService" >
+            <intent-filter>
+                <action android:name="com.borqs.ivi_collect.INSTALL_APK" />
             </intent-filter>
         </service>
     </application>

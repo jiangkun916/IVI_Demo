@@ -1,20 +1,14 @@
 package com.borqs.ivi_collect.collector;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
 
 import com.borqs.ivi_collect.util.Util;
-import com.borqs.ivi_collect.util.UtilThread;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationManager;
 import android.provider.Settings;
@@ -125,6 +119,7 @@ public class DataCollector extends IntentService {
 		}
 
 		startService(target);
+		target = null;
 
 	}
 
@@ -240,90 +235,65 @@ public class DataCollector extends IntentService {
 
 	// get time
 	private String getCollectTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(
-				System.currentTimeMillis()));
+//		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(
+//				System.currentTimeMillis()));
+		return Long.toString(System.currentTimeMillis()); 
 
 	}
 
 	// get power on
 	private String getPowerOn() {
-		File file = null;
-		file = new File("/sdcard/b.txt");
-		if (!file.exists()) {
-			return null;
-		}
-		String result = null;
-		FileReader fileReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			fileReader = new FileReader(file);
-			bufferedReader = new BufferedReader(fileReader);
-			try {
-				result = bufferedReader.readLine();
+		
+		SharedPreferences sharedata = getSharedPreferences("poweron", Context.MODE_PRIVATE);    
+		String poweron = sharedata.getString("time", null);    
+		return poweron;
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (fileReader != null) {
-				try {
-					fileReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return result;
 	}
 
 	// get last shutdown time
 	private String getLastPowerOff() {
-		File file = null;
-		file = new File("/sdcard/a.txt");
-		if (!file.exists()) {
-			return null;
-		}
-		String result = null;
-		FileReader fileReader = null;
-		BufferedReader bufferedReader = null;
-		try {
-			fileReader = new FileReader(file);
-			bufferedReader = new BufferedReader(fileReader);
-			try {
-				result = bufferedReader.readLine();
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (bufferedReader != null) {
-				try {
-					bufferedReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-			if (fileReader != null) {
-				try {
-					fileReader.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		return result;
-
+//		File file = null;
+//		file = new File("/sdcard/a.txt");
+//		if (!file.exists()) {
+//			return null;
+//		}
+//		String result = null;
+//		FileReader fileReader = null;
+//		BufferedReader bufferedReader = null;
+//		try {
+//			fileReader = new FileReader(file);
+//			bufferedReader = new BufferedReader(fileReader);
+//			try {
+//				result = bufferedReader.readLine();
+//
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (bufferedReader != null) {
+//				try {
+//					bufferedReader.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//			if (fileReader != null) {
+//				try {
+//					fileReader.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+//		return result;
+		
+		
+		
+		SharedPreferences sharedata = getSharedPreferences("poweroff", Context.MODE_PRIVATE);    
+		String poweroff = sharedata.getString("time", null);    
+		return poweroff;
 	}
 
 }

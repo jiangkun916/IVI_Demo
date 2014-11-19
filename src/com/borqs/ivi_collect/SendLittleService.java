@@ -2,6 +2,7 @@ package com.borqs.ivi_collect;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -9,6 +10,7 @@ import com.borqs.ivi_collect.database.DatabaseHelper;
 import com.borqs.ivi_collect.util.Util;
 import com.borqs.ivi_collect.util.Util.Report;
 
+import android.app.ActivityManager;
 import android.app.IntentService;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,15 +21,14 @@ import android.util.Log;
 public class SendLittleService extends IntentService {
 
 	private final static String TAG = "SendLittleService";
-	private final static String serverUrl = "http://releaseadmin.borqs.com/su/gps.php";
-	private String[] lng = new String[5]; 
-	private String[] lat = new String[5]; 
-	private String[] time = new String[5]; 
+	private final String serverUrl = "http://releaseadmin.borqs.com/su/gps.php";
+	private String[] lng = new String[5];
+	private String[] lat = new String[5];
+	private String[] time = new String[5];
 	private String tuid = null;
 	private String id = null;
 
 	private DatabaseHelper mOpenHelper;
-
 
 	public SendLittleService() {
 		super(TAG);
@@ -45,75 +46,55 @@ public class SendLittleService extends IntentService {
 		if (action.equals(Util.Action.SEND_LITTLE_REPORT)) {
 
 			// Check if the network is available
+
 			if (!Util.isNetworkAvailable(this)) {
 				Log.i(TAG, "Network is not available.");
 				return;
 			}
-			
-			// TODO: cpu判断
 
+			// TODO: cpu判断
 
 			SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 			Cursor cursor = db.rawQuery("SELECT * FROM part_information", null);
-					
+
 			int count = cursor.getCount();
-			
-			
 			if (count >= 5) {
 				if (cursor.moveToFirst()) {
 					for (int i = 0; i < 5; i++) {
-						tuid = cursor.getString(cursor.getColumnIndex(Util.ExtraKeys.TUID));
+						tuid = cursor.getString(cursor
+								.getColumnIndex(Util.ExtraKeys.TUID));
 						Log.i(TAG, "------tuid------>>" + tuid);
 
-						lng[i]=cursor.getString(cursor
+						lng[i] = cursor.getString(cursor
 								.getColumnIndex(Util.ExtraKeys.LONGITUDE));
-						Log.i(TAG, "------lng------>>" + lng[i]);
+						Log.i(TAG, "------"+lng[i]+"------>>" + lng[i]);
 
-						lat[i]=cursor.getString(cursor
+						lat[i] = cursor.getString(cursor
 								.getColumnIndex(Util.ExtraKeys.LATITUDE));
-						Log.i(TAG, "------lat------>>" + lat[i]);
+						Log.i(TAG, "------"+lat[i]+"------>>" + lat[i]);
 
-						time[i]=cursor.getString(cursor
+						time[i] = cursor.getString(cursor
 								.getColumnIndex(Util.ExtraKeys.TIME));
-						Log.i(TAG, "------time------>>" + time[i]);
-						
+						Log.i(TAG, "------"+time[i]+"------>>" + time[i]);
+
 						id = cursor.getString(cursor
 								.getColumnIndex(Util.ExtraKeys.COL_ID));
 						Log.i(TAG, "------id------>>" + id);
-						
+
 						cursor.moveToNext();
 					}
 				}
-			} else{
+			} else {
 				cursor.close();
 				cursor = null;
 				db.close();
 				return;
 			}
 
+			cursor.close();
+			cursor = null;
 			Report report = new Report();
 			report.setTuid(tuid);
-			
-			report.setLng1(lng[0]);
-			report.setLat1(lat[0]);
-			report.setTime1(time[0]);
-
-			report.setLng2(lng[1]);
-			report.setLat2(lat[1]);
-			report.setTime2(time[1]);
-			
-			report.setLng3(lng[2]);
-			report.setLat3(lat[2]);
-			report.setTime3(time[2]);
-			
-			report.setLng4(lng[3]);
-			report.setLat4(lat[3]);
-			report.setTime4(time[3]);
-			
-			report.setLng5(lng[4]);
-			report.setLat5(lat[4]);
-			report.setTime5(time[4]);
-			
 			try {
 				// Convert report data to JSON string
 				NameValuePair reportJsonString = ConvertToJSONString(report);
@@ -124,22 +105,21 @@ public class SendLittleService extends IntentService {
 				long newStatus = -1;
 				newStatus = Util.sendReport(serverUrl, reportJsonString);
 				Log.i(TAG, "-----newStatus----->>" + newStatus);
-				
-				if (newStatus == 0) {
-					db.execSQL("DELETE FROM part_information where _id<="+id);
+
+				if (newStatus == 0000) {
+					db.execSQL("DELETE FROM part_information where _id<=" + id);
 					Log.i(TAG, "------id------>>" + id);
 				}
+
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			cursor.close();
-			cursor = null;
 			db.close();
+			displayBriefMemory();
 		}
 
 	}
 
-	
 	/**
 	 * Convert the reportLittleData into JSON string which can be send directly.
 	 * JSONObject: ReportDataJSONString Extras: tuid gps (longitude, latitude,
@@ -152,48 +132,31 @@ public class SendLittleService extends IntentService {
 		try {
 			// Define the report data JSON string object
 			JSONObject reportDataJSONString = new JSONObject();
-
+			
+			
 			// Define gps JSON string object
-			JSONObject gps1 = new JSONObject();			
-			JSONObject gps2 = new JSONObject();
-			JSONObject gps3 = new JSONObject();
-			JSONObject gps4 = new JSONObject();
-			JSONObject gps5 = new JSONObject();
+			JSONObject[] gpsobject = new JSONObject[5];
+			JSONArray gps = new JSONArray();
+			for(int i=0;i<5;i++ ){
+				gpsobject[i]= new JSONObject();
+				gpsobject[i].put("lng", lng[i]);
+				gpsobject[i].put("lat", lat[i]);
+				gpsobject[i].put("t", time[i]);
+				gps.put(gpsobject[i]);
+				
+			}
 
-			// Get gps
-			gps1.put(Util.ExtraKeys.LONGITUDE, report.lng1);
-			gps1.put(Util.ExtraKeys.LATITUDE, report.lat1);
-			gps1.put(Util.ExtraKeys.TIME, report.time1);
 
-			gps2.put(Util.ExtraKeys.LONGITUDE, report.lng2);
-			gps2.put(Util.ExtraKeys.LATITUDE, report.lat2);
-			gps2.put(Util.ExtraKeys.TIME, report.time2);
-			
-			gps3.put(Util.ExtraKeys.LONGITUDE, report.lng3);
-			gps3.put(Util.ExtraKeys.LATITUDE, report.lat3);
-			gps3.put(Util.ExtraKeys.TIME, report.time3);
-			
-			gps4.put(Util.ExtraKeys.LONGITUDE, report.lng4);
-			gps4.put(Util.ExtraKeys.LATITUDE, report.lat4);
-			gps4.put(Util.ExtraKeys.TIME, report.time4);
-			
-			gps5.put(Util.ExtraKeys.LONGITUDE, report.lng5);
-			gps5.put(Util.ExtraKeys.LATITUDE, report.lat5);
-			gps5.put(Util.ExtraKeys.TIME, report.time5);
 			
 			// Put these info to reportDataJSONString object
 			reportDataJSONString.put(Util.ExtraKeys.TUID, report.tuid);
+			reportDataJSONString.put("gps", gps);
 			
-			reportDataJSONString.put("gps1", gps1);
-			reportDataJSONString.put("gps2", gps2);
-			reportDataJSONString.put("gps3", gps3);
-			reportDataJSONString.put("gps4", gps4);
-			reportDataJSONString.put("gps5", gps5);
-			
+			reportDataJSONString.put(Util.ExtraKeys.TYPE, "B");
 
 			NameValuePair nameValuePair = new BasicNameValuePair("info",
 					reportDataJSONString.toString());
-
+			
 			Log.i(TAG, "nameValuePair:" + nameValuePair.toString());
 
 			return nameValuePair;
@@ -202,5 +165,18 @@ public class SendLittleService extends IntentService {
 			return null;
 		}
 	}
-
+	 private void displayBriefMemory() {        
+         final ActivityManager activityManager = (ActivityManager)   getSystemService(ACTIVITY_SERVICE);    
+ 
+       ActivityManager.MemoryInfo   info = new ActivityManager.MemoryInfo();   
+ 
+         activityManager.getMemoryInfo(info);    
+ 
+         Log.i("memoryinfo","系统剩余内存:"+(info.availMem >> 10)+"k");   
+ 
+         Log.i("memoryinfo","系统是否处于低内存运行："+info.lowMemory);
+ 
+         Log.i("memoryinfo","当系统剩余内存低于"+info.threshold+"时就看成低内存运行");
+ 
+   }
 }
